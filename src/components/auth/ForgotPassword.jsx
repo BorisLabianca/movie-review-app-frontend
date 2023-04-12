@@ -1,14 +1,16 @@
+import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
 import CustomLink from "../CustomLink";
+import FormContainer from "../form/FormContainer";
 import ForInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 
 const ForgotPassword = () => {
   return (
-    <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded p-6 w-96 space-y-6">
+        <form className={commonModalClasses + " w-96"}>
           <Title>Please Enter Your Email</Title>
           <ForInput label="Email" placeholder="john@email.com" name="email" />
           <Submit value="Send Link" />
@@ -18,7 +20,7 @@ const ForgotPassword = () => {
           </div>
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 

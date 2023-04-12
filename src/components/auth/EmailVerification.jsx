@@ -4,6 +4,8 @@ import CustomLink from "../CustomLink";
 import ForInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
+import FormContainer from "../form/FormContainer";
+import { commonModalClasses } from "../../utils/theme";
 
 const OTP_LENGTH = 6;
 let currentOtpIndex;
@@ -48,12 +50,12 @@ const EmailVerification = () => {
     inputRef?.current?.focus();
   }, [activeOtpIndex]);
   return (
-    <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
+    <FormContainer>
       <Container>
-        <form className="bg-secondary rounded p-6 space-y-6">
+        <form className={commonModalClasses}>
           <div>
             <Title>Please enter the OTP to verify your account</Title>
-            <p className="text-center text-dark-subtle">
+            <p className="text-center dark:text-dark-subtle text-light-subtle">
               The OTP has been sent to your email address.
             </p>
           </div>
@@ -61,7 +63,7 @@ const EmailVerification = () => {
             {otp.map((_, index) => {
               return (
                 <input
-                  className="w-12 h-12 rounded border-2 border-dark-subtle focus:border-white bg-transparent outline-none transition text-center text-white font-semibold text-xl spin-button-none"
+                  className="w-12 h-12 rounded border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary bg-transparent outline-none transition text-center dark:text-white text-primary font-semibold text-xl spin-button-none"
                   type="number"
                   value={otp[index] || ""}
                   ref={activeOtpIndex === index ? inputRef : null}
@@ -79,7 +81,7 @@ const EmailVerification = () => {
           <Submit value="Send Link" />
         </form>
       </Container>
-    </div>
+    </FormContainer>
   );
 };
 
