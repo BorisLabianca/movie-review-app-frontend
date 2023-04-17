@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
 import CustomLink from "../CustomLink";
@@ -6,6 +7,8 @@ import FormContainer from "../form/FormContainer";
 import ForInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
+import { createUser } from "../../api/auth";
+import { useNotification } from "../../hooks";
 
 const validateUserInfo = ({ name, email, password }) => {
   if (!name.trim()) return { ok: false, error: "Name is missing." };
@@ -25,6 +28,8 @@ const validateUserInfo = ({ name, email, password }) => {
 };
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const { updateNotification } = useNotification();
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
@@ -34,13 +39,20 @@ const Signup = () => {
     const { value, name } = target;
     setUserInfo({ ...userInfo, [name]: value });
   };
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
     if (!ok) {
-      return console.log(error);
+      return updateNotification("error", error);
     }
-    console.log(userInfo);
+    const response = await createUser(userInfo);
+    if (response.error) return console.log(response.error);
+
+    navigate("/auth/verification", {
+      state: { user: response.user },
+      replace: true,
+    });
+    console.log(response.user);
   };
   const { name, email, password } = userInfo;
   return (
