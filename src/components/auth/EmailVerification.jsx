@@ -6,7 +6,7 @@ import Title from "../form/Title";
 import FormContainer from "../form/FormContainer";
 import { commonModalClasses } from "../../utils/theme";
 import { verifyUserEmail } from "../../api/auth";
-import { useNotification } from "../../hooks";
+import { useAuth, useNotification } from "../../hooks";
 
 const OTP_LENGTH = 6;
 let currentOtpIndex;
@@ -25,6 +25,8 @@ const EmailVerification = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
+  const { isAuth, authInfo } = useAuth();
+  const { isLoggedIn } = authInfo;
   const user = state?.user;
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
@@ -68,14 +70,23 @@ const EmailVerification = () => {
       return updateNotification("error", "Invalid OTP.");
     }
 
-    const { error, message } = await verifyUserEmail({
+    const {
+      error,
+      message,
+      user: userResponse,
+    } = await verifyUserEmail({
       OTP: otp.join(""),
       userId: user.id,
     });
-    if (error) return updateNotification("error", error);
+    // console.log("error otp: ", error);
 
+    if (error) {
+      return updateNotification("error", error);
+    }
     updateNotification("success", message);
-    console.log(message);
+    // console.log("message otp: ", message);
+    localStorage.setItem("auth-token", userResponse.token);
+    isAuth();
   };
 
   useEffect(() => {
@@ -86,7 +97,10 @@ const EmailVerification = () => {
     if (!user) {
       navigate("/not-found");
     }
-  }, [user]);
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [user, isLoggedIn]);
   return (
     <FormContainer>
       <Container>
