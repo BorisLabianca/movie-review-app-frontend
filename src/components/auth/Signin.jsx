@@ -8,6 +8,7 @@ import ForInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { useAuth, useNotification } from "../../hooks";
+import { isValidEmail } from "../../utils/helper";
 
 const Signin = () => {
   const [userInfo, setUserInfo] = useState({
@@ -27,8 +28,7 @@ const Signin = () => {
 
   const validateUserInfo = ({ email, password }) => {
     if (!email.trim()) return { ok: false, error: "Email is missing." };
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
-      return { ok: false, error: "Invallid email." };
+    if (!isValidEmail(email)) return { ok: false, error: "Invallid email." };
 
     if (!password.trim()) return { ok: false, error: "Password is missing." };
     if (password.length < 8)

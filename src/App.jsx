@@ -7,7 +7,7 @@ import Signin from "./components/auth/Signin";
 import Signup from "./components/auth/Signup";
 import EmailVerification from "./components/auth/EmailVerification";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import ConfirmPassword from "./components/auth/ConfirmPassword";
+import ResetPassword from "./components/auth/ResetPassword";
 import NotFound from "./components/NoutFound";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Route path="/auth/signup" element={<Signup />} />
         <Route path="/auth/verification" element={<EmailVerification />} />
         <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-        <Route path="/auth/confirm-password" element={<ConfirmPassword />} />
+        <Route path="/auth/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

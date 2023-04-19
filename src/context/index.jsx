@@ -4,11 +4,11 @@ import ThemeProvider from "./ThemeProvider";
 
 const ContextProviders = ({ children }) => {
   return (
-    <AuthProvider>
-      <NotificationProvider>
+    <NotificationProvider>
+      <AuthProvider>
         <ThemeProvider>{children}</ThemeProvider>
-      </NotificationProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </NotificationProvider>
   );
 };
 
