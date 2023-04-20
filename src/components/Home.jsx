@@ -1,5 +1,7 @@
+import NotVerified from "./user/NotVerified";
+
 const Home = () => {
-  return <div>Home</div>;
+  return <NotVerified />;
 };
 
 export default Home;

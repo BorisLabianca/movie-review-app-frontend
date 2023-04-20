@@ -5,7 +5,7 @@ import Submit from "../form/Submit";
 import Title from "../form/Title";
 import FormContainer from "../form/FormContainer";
 import { commonModalClasses } from "../../utils/theme";
-import { verifyUserEmail } from "../../api/auth";
+import { resendEmailVerificationToken, verifyUserEmail } from "../../api/auth";
 import { useAuth, useNotification } from "../../hooks";
 
 const OTP_LENGTH = 6;
@@ -26,7 +26,8 @@ const EmailVerification = () => {
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
   const { isAuth, authInfo } = useAuth();
-  const { isLoggedIn } = authInfo;
+  const { isLoggedIn, profile } = authInfo;
+  const isVerified = profile?.isVerified;
   const user = state?.user;
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
@@ -56,13 +57,21 @@ const EmailVerification = () => {
     setOtp(newOtp);
   };
 
+  const handleResendOTP = async () => {
+    const { error, message } = await resendEmailVerificationToken(user.id);
+
+    if (error) return updateNotification("error", error);
+
+    updateNotification("success", message);
+  };
+
   const handleKeyDown = ({ key }, index) => {
     currentOtpIndex = index;
     if (key === "Backspace") {
       focusPreviousUnputField(currentOtpIndex);
     }
   };
-  console.log(otp);
+  // console.log(otp);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,13 +103,10 @@ const EmailVerification = () => {
   }, [activeOtpIndex]);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/not-found");
-    }
-    if (isLoggedIn) {
-      navigate("/");
-    }
-  }, [user, isLoggedIn]);
+    if (!user) navigate("/not-found");
+    if (isLoggedIn && isVerified) navigate("/");
+  }, [user, isLoggedIn, isVerified]);
+  // console.log(isVerified);
   return (
     <FormContainer>
       <Container>
@@ -130,7 +136,16 @@ const EmailVerification = () => {
               );
             })}
           </div>
-          <Submit value="Verify Account" />
+          <div>
+            <Submit value="Verify Account" />
+            <button
+              type="button"
+              className="dark:text-white font-semibold hover:underline mt-2 text-blue-500"
+              onClick={handleResendOTP}
+            >
+              Don't have an OTP?
+            </button>
+          </div>
         </form>
       </Container>
     </FormContainer>

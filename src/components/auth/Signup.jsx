@@ -54,7 +54,7 @@ const Signup = () => {
       state: { user: response.user },
       replace: true,
     });
-    console.log(response.user);
+    // console.log(response.user);
   };
 
   useEffect(() => {

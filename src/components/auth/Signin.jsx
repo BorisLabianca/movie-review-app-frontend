@@ -19,7 +19,7 @@ const Signin = () => {
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
   const { isPending, isLoggedIn } = authInfo;
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
