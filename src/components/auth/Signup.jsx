@@ -4,7 +4,7 @@ import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
 import CustomLink from "../CustomLink";
 import FormContainer from "../form/FormContainer";
-import ForInput from "../form/FormInput";
+import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { createUser } from "../../api/auth";
@@ -67,21 +67,21 @@ const Signup = () => {
       <Container>
         <form className={commonModalClasses + " w-72"} onSubmit={handleSubmit}>
           <Title>Sign up</Title>
-          <ForInput
+          <FormInput
             value={name}
             onChange={handleChange}
             label="Name"
             placeholder="John Doe"
             name="name"
           />
-          <ForInput
+          <FormInput
             value={email}
             onChange={handleChange}
             label="Email"
             placeholder="john@email.com"
             name="email"
           />
-          <ForInput
+          <FormInput
             value={password}
             onChange={handleChange}
             label="Password"

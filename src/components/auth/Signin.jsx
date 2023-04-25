@@ -4,7 +4,7 @@ import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
 import CustomLink from "../CustomLink";
 import FormContainer from "../form/FormContainer";
-import ForInput from "../form/FormInput";
+import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { useAuth, useNotification } from "../../hooks";
@@ -47,22 +47,22 @@ const Signin = () => {
     }
     handleLogin(userInfo.email, userInfo.password);
   };
-  useEffect(() => {
-    if (isLoggedIn) navigate("/");
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (isLoggedIn) navigate("/");
+  // }, [isLoggedIn]);
   return (
     <FormContainer>
       <Container>
         <form onSubmit={handleSubmit} className={commonModalClasses + " w-72"}>
           <Title>Sign in</Title>
-          <ForInput
+          <FormInput
             value={userInfo.email}
             label="Email"
             placeholder="john@email.com"
             name="email"
             onChange={handleChange}
           />
-          <ForInput
+          <FormInput
             value={userInfo.password}
             label="Password"
             placeholder="********"

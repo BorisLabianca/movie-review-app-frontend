@@ -1,13 +1,22 @@
 import logo from "../../assets/logo.png";
-import { BsSunFill } from "react-icons/bs";
+import { BsSunFill, BsMoonFill } from "react-icons/bs";
 import Container from "../Container";
 import { Link } from "react-router-dom";
 import { useAuth, useTheme } from "../../hooks";
+import { useState } from "react";
 
 const Navbar = () => {
   const { toggleTheme } = useTheme();
   const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
+  const getTheme = () => {
+    return localStorage.getItem("theme");
+  };
+  const [theme, setTheme] = useState(getTheme || "light");
+  const handleThemeButton = () => {
+    toggleTheme();
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500">
@@ -20,9 +29,13 @@ const Navbar = () => {
             <li>
               <button
                 className="bg-dark-subtle dark:bg-white p-1 rounded"
-                onClick={toggleTheme}
+                onClick={handleThemeButton}
               >
-                <BsSunFill className="text-secondary size-{24}" />
+                {theme === "light" ? (
+                  <BsMoonFill className="text-secondary size-{24}" />
+                ) : (
+                  <BsSunFill className="text-secondary size-{24}" />
+                )}
               </button>
             </li>
             <li>

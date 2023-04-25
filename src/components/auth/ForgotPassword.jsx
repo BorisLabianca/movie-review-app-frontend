@@ -3,7 +3,7 @@ import { commonModalClasses } from "../../utils/theme";
 import Container from "../Container";
 import CustomLink from "../CustomLink";
 import FormContainer from "../form/FormContainer";
-import ForInput from "../form/FormInput";
+import FormInput from "../form/FormInput";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 import { forgotPassword } from "../../api/auth";
@@ -34,7 +34,7 @@ const ForgotPassword = () => {
       <Container>
         <form onSubmit={handleSubmit} className={commonModalClasses + " w-96"}>
           <Title>Please Enter Your Email</Title>
-          <ForInput
+          <FormInput
             onChange={handleChange}
             value={email}
             label="Email"
