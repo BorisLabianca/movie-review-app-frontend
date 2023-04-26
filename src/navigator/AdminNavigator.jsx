@@ -11,7 +11,7 @@ const AdminNavigator = () => {
     <div className="flex dark:bg-primary bg-white">
       <NavbarAdmin />
       <div className="flex-1 p-2 max-w-screen-xl">
-        <Header />
+        <Header onAddMovieClick={{}} />
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/movies" element={<Movies />} />

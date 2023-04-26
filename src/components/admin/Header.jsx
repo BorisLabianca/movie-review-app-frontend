@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { BsSunFill, BsMoonFill } from "react-icons/bs";
 import { useTheme } from "../../hooks";
+import ToggleThemeButton from "../ToggleThemeButton";
 
-const Header = () => {
+const Header = ({ onAddMovieClick, onAddActorClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { toggleTheme } = useTheme();
 
@@ -15,6 +15,11 @@ const Header = () => {
     toggleTheme();
     setTheme(theme === "light" ? "dark" : "light");
   };
+
+  const options = [
+    { title: "Add movie", onClick: onAddMovieClick },
+    { title: "Add actor", onClick: onAddActorClick },
+  ];
   return (
     <div className="flex items-center justify-between relative">
       <input
@@ -23,16 +28,7 @@ const Header = () => {
         placeholder="Search Movies..."
       />
       <div className="flex items-center space-x-3">
-        <button
-          className="dark:text-white text-light-subtle p-1 rounded"
-          onClick={handleThemeButton}
-        >
-          {theme === "light" ? (
-            <BsMoonFill className="size-{24}" />
-          ) : (
-            <BsSunFill className="size-{24}" />
-          )}
-        </button>
+        <ToggleThemeButton />
         <button
           className="flex items-center space-x-2 dark:border-dark-subtle border-light-subtle dark:text-dark-subtle text-light-subtle border-secondary text-secondary hover:opacity-80 transition font-semibold border-2 rounded text-lg px-3 py-1"
           onClick={() => {
@@ -44,6 +40,7 @@ const Header = () => {
         </button>
         <CreateOptions
           visible={showOptions}
+          options={options}
           onClose={() => {
             setShowOptions(false);
           }}
@@ -53,7 +50,7 @@ const Header = () => {
   );
 };
 
-const CreateOptions = ({ visible, onClose }) => {
+const CreateOptions = ({ options, visible, onClose }) => {
   const containerRef = useRef();
   const containerID = "option-container";
 
@@ -91,8 +88,9 @@ const CreateOptions = ({ visible, onClose }) => {
       onAnimationEnd={handleAnimationEnd}
       ref={containerRef}
     >
-      <Option>Add movie</Option>
-      <Option>Add actor</Option>
+      {options.map(({ title, onClick }) => {
+        return <Option onClick={onClick}>{title}</Option>;
+      })}
     </div>
   );
 };

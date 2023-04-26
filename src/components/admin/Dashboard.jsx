@@ -1,4 +1,6 @@
+import MovieUpload from "./MovieUpload";
+
 const Dashboard = () => {
-  return <div className="">Dashboard</div>;
+  return <MovieUpload />;
 };
 export default Dashboard;
