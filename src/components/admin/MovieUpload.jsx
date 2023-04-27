@@ -3,25 +3,35 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useNotification } from "../../hooks";
 import { uploadTrailer } from "../../api/movie";
 import { useState } from "react";
+import MovieForm from "./MovieForm";
 
 const MovieUpload = () => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [trailerInfo, setTrailerInfo] = useState({});
 
   const { updateNotification } = useNotification();
   const handleTypeError = (error) => {
     updateNotification("error", error);
   };
-  const handleChange = async (file) => {
+
+  const handleUploadTrailer = async (formData) => {
+    const { error, url, public_id } = await uploadTrailer(
+      formData,
+      setUploadProgress
+    );
+    if (error) return updateNotification("error", error);
+    setVideoUploaded(true);
+    setTrailerInfo(url, public_id);
+  };
+
+  const handleChange = (file) => {
     const formData = new FormData();
     formData.append("video", file);
 
     setVideoSelected(true);
-    const res = await uploadTrailer(formData, setUploadProgress);
-    if (!res.error) {
-      setVideoUploaded(true);
-    }
+    handleUploadTrailer(formData);
   };
 
   const getUploadProgressValue = () => {
@@ -34,7 +44,7 @@ const MovieUpload = () => {
   return (
     <div className="fixed inset-0 bg-primary bg-opacity-50 dark:bg-white dark:bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
       <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2">
-        <UploadProgress
+        {/* <UploadProgress
           visible={!videoUploaded && videoSelected}
           message={getUploadProgressValue()}
           width={uploadProgress}
@@ -43,7 +53,9 @@ const MovieUpload = () => {
           visible={!videoSelected}
           onTypeError={handleTypeError}
           handleChange={handleChange}
-        />
+        /> */}
+
+        <MovieForm />
       </div>
     </div>
   );
