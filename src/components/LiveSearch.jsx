@@ -92,14 +92,7 @@ const LiveSearch = () => {
 };
 
 export default LiveSearch;
-const renderItem = ({ id, name, avatar }) => {
-  return (
-    <div className="flex">
-      <img src={avatar} alt={name} />
-      <p>{name}</p>
-    </div>
-  );
-};
+
 const SearchResults = ({
   visible,
   results = [],
