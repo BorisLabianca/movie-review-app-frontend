@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const TagsInput = () => {
+const TagsInput = ({ name, onChange }) => {
   const inputRef = useRef();
   const tagsInputRef = useRef();
   const [tag, setTag] = useState("");
@@ -10,6 +10,7 @@ const TagsInput = () => {
   const handleOnChange = ({ target }) => {
     const { value } = target;
     if (value !== ",") setTag(value);
+    onChange(tags);
   };
 
   const handleKeyDown = ({ key }) => {
@@ -50,12 +51,15 @@ const TagsInput = () => {
   };
 
   useEffect(() => {
-    inputRef.current.scrollIntoView({
+    inputRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "end",
       inline: "nearest",
     });
   }, [tag]);
+  useEffect(() => {
+    onChange(tags);
+  }, [tags]);
 
   return (
     <div>
@@ -74,6 +78,7 @@ const TagsInput = () => {
         <input
           ref={inputRef}
           type="text"
+          id={name}
           placeholder="Tag one, Tag two,"
           className="h-full flex-grow bg-transparent outline-none dark:text-white"
           value={tag}
