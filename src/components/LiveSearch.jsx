@@ -11,6 +11,7 @@ const LiveSearch = ({
   placeholder = "",
   onSelect = null,
   inputStyle,
+  name,
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -45,13 +46,15 @@ const LiveSearch = ({
   const getInputStyle = () => {
     return inputStyle
       ? inputStyle
-      : commonInputClasses + " border-2 rounded p-1 text-lg";
+      : commonInputClasses + " border-2 rounded p-1 text-lg mt-2";
   };
 
   return (
     <div className="relative">
       <input
         type="text"
+        id={name}
+        name={name}
         className={getInputStyle()}
         placeholder={placeholder}
         onFocus={handleOnFocus}
@@ -93,7 +96,7 @@ const SearchResults = ({
   }, [focusedIndex]);
   if (!visible) return null;
   return (
-    <div className="absolute right-0 left-0 top-10 bg-white dark:bg-secondary shadow-md p-2 max-h-64 overflow-auto space-y-2 mt-1 custom-scroll-bar">
+    <div className="absolute z-50 right-0 left-0 top-10 bg-white dark:bg-secondary shadow-md p-2 max-h-64 overflow-auto space-y-2 mt-1 custom-scroll-bar">
       {results.map((result, index) => {
         const getSelectedClass = () => {
           return selectedResultStyle
@@ -103,7 +106,7 @@ const SearchResults = ({
         return (
           <ResultCard
             ref={index === focusedIndex ? resultContainerRef : null}
-            key={result.id}
+            key={index.toString()}
             item={result}
             renderItem={renderItem}
             resultContainerStyle={resultContainerStyle}

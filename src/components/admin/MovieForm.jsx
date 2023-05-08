@@ -3,6 +3,9 @@ import { commonInputClasses } from "../../utils/theme";
 import LiveSearch from "../LiveSearch";
 import TagsInput from "../TagsInput";
 import Submit from "../form/Submit";
+import { useNotification } from "../../hooks";
+import ModalContainer from "../modals/ModalContainer";
+import WritersModal from "../modals/WritersModal";
 
 export const results = [
   {
@@ -59,7 +62,9 @@ const defaultMovieInfo = {
 };
 
 const MovieForm = () => {
+  const { updateNotification } = useNotification();
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
+  const [showWritersModal, setShowWritersModal] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("handleSubmit log: ", movieInfo);
@@ -87,48 +92,120 @@ const MovieForm = () => {
     setMovieInfo({ ...movieInfo, tags });
   };
 
-  const { title, storyLine, director } = movieInfo;
+  const updateDirector = (profile) => {
+    setMovieInfo({ ...movieInfo, director: profile });
+  };
+  const updateWriters = (profile) => {
+    const { writers } = movieInfo;
+    for (let writer of writers) {
+      if (writer.id === profile.id) {
+        return updateNotification(
+          "warning",
+          "This profile is already selected."
+        );
+      }
+    }
+    setMovieInfo({ ...movieInfo, writers: [...writers, profile] });
+  };
+
+  const hideWritersModal = () => {
+    setShowWritersModal(false);
+  };
+
+  const displayWritersModal = () => {
+    const { writers } = movieInfo;
+    if (!writers.length) {
+      return updateNotification("warning", "No writers added yet.");
+    }
+    setShowWritersModal(true);
+  };
+  const handleWriterRemoval = (profileId) => {
+    const { writers } = movieInfo;
+    const newWriters = writers.filter(({ id }) => id !== profileId);
+    if (!newWriters.length) hideWritersModal();
+    setMovieInfo({ ...movieInfo, writers: [...newWriters] });
+  };
+
+  const { title, storyLine, director, writers } = movieInfo;
 
   return (
-    <form className="flex space-x-3" onSubmit={handleSubmit}>
-      <div className="w-[70%] h-5 space-y-5">
-        <div>
-          <Label htmlFor="title">Title</Label>
-          <input
-            type="text"
-            value={title}
-            onChange={handleChange}
-            name="title"
-            id="title"
-            placeholder="X-Men"
-            className={commonInputClasses + " border-b-2 font-semibold text-xl"}
-          />
+    <>
+      <form className="flex space-x-3" onSubmit={handleSubmit}>
+        <div className="w-[70%] h-5 space-y-5">
+          <div>
+            <Label htmlFor="title">Title</Label>
+            <input
+              type="text"
+              value={title}
+              onChange={handleChange}
+              name="title"
+              id="title"
+              placeholder="X-Men"
+              className={
+                commonInputClasses + " border-b-2 font-semibold text-xl"
+              }
+            />
+          </div>
+          <div>
+            <Label htmlFor="storyLine">Storyline</Label>
+            <textarea
+              id="storyLine"
+              placeholder="Movie storyline..."
+              className={commonInputClasses + " resize-none h-24 border-b-2"}
+              value={storyLine}
+              onChange={handleChange}
+              name="storyLine"
+            ></textarea>
+          </div>
+          <div>
+            <Label htmlFor="tags">Tags</Label>
+            <TagsInput name="tags" onChange={updateTags} />
+          </div>
+          <div>
+            <Label htmlFor="director">Director</Label>
+            <LiveSearch
+              name="director"
+              placeholder="Search profile"
+              results={results}
+              renderItem={renderItem}
+              onSelect={updateDirector}
+              value={director.name}
+            />
+          </div>
+          <div>
+            <div className="flex justify-between">
+              <LabelWithBadge badge={writers.length} htmlFor="writers">
+                Writers
+              </LabelWithBadge>
+              <button
+                className="dark:text-white text-primary hover:underline transition"
+                onClick={displayWritersModal}
+                type="button"
+              >
+                View All
+              </button>
+            </div>
+
+            <LiveSearch
+              name="writers"
+              placeholder="Search profile"
+              results={results}
+              renderItem={renderItem}
+              onSelect={updateWriters}
+            />
+          </div>
+
+          <Submit value="Upload" />
         </div>
-        <div>
-          <Label htmlFor="storyLine">Storyline</Label>
-          <textarea
-            id="storyLine"
-            placeholder="Movie storyline..."
-            className={commonInputClasses + " resize-none h-24 border-b-2"}
-            value={storyLine}
-            onChange={handleChange}
-            name="storyLine"
-          ></textarea>
-        </div>
-        <div>
-          <Label htmlFor="tags">Tags</Label>
-          <TagsInput name="tags" onChange={updateTags} />
-        </div>
-        <LiveSearch
-          placeholder="Search profile"
-          results={results}
-          renderItem={renderItem}
-          onSelect={(result) => console.log(result)}
-        />
-        <Submit value="Upload" />
-      </div>
-      <div className="w-[30%] h-5 bg-green-400"></div>
-    </form>
+        <div className="w-[30%] h-5 bg-green-400"></div>
+      </form>
+      <WritersModal
+        visible={showWritersModal}
+        profiles={writers}
+        onClose={hideWritersModal}
+        onRemoveClick={handleWriterRemoval}
+      ></WritersModal>
+    </>
   );
 };
 
@@ -142,5 +219,21 @@ const Label = ({ children, htmlFor }) => {
     >
       {children}
     </label>
+  );
+};
+
+const LabelWithBadge = ({ children, htmlFor, badge }) => {
+  const renderBadge = () => {
+    return (
+      <span className="dark:bg-dark-subtle bg-light-subtle absolute top-0 right-0 translate-x-5 -translate-y-2 text-xs w-5 h-5 rounded-full flex justify-center items-center text-white">
+        {badge <= 9 ? badge : "9+"}
+      </span>
+    );
+  };
+  return (
+    <div className="relative">
+      <Label htmlFor={htmlFor}>{children}</Label>
+      {renderBadge()}
+    </div>
   );
 };
