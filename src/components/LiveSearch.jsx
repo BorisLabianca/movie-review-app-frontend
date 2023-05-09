@@ -20,13 +20,22 @@ const LiveSearch = ({
     if (results.length) setDisplaySearch(true);
   };
 
-  const handleOnBlur = () => {
+  const closeSearch = () => {
     setDisplaySearch(false);
     setFocusedIndex(-1);
   };
 
+  const handleOnBlur = () => {
+    setTimeout(() => {
+      closeSearch();
+    }, 100);
+  };
+
   const handleSelection = (selectedItem) => {
-    onSelect(selectedItem);
+    if (selectedItem) {
+      onSelect(selectedItem);
+      closeSearch();
+    }
   };
 
   const handleKeyDown = ({ key }) => {
@@ -39,7 +48,9 @@ const LiveSearch = ({
     if (key === "ArrowUp") {
       nextCount = (focusedIndex + results.length - 1) % results.length;
     }
+    if (key === "Escape") return closeSearch();
     if (key === "Enter") return handleSelection(results[focusedIndex]);
+
     setFocusedIndex(nextCount);
   };
 
