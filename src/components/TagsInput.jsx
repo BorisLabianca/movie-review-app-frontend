@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-const TagsInput = ({ name, onChange }) => {
+const TagsInput = ({ name, onChange, value }) => {
   const inputRef = useRef();
   const tagsInputRef = useRef();
   const [tag, setTag] = useState("");
@@ -49,6 +49,10 @@ const TagsInput = ({ name, onChange }) => {
       "border-primary"
     );
   };
+
+  useEffect(() => {
+    if (value.length) setTags(value);
+  }, [value]);
 
   useEffect(() => {
     inputRef.current?.scrollIntoView({
