@@ -78,6 +78,10 @@ const CreateOptions = ({ options, visible, onClose }) => {
     if (event.target.classList.contains("animate-scale-reverse")) onClose();
     event.target.classList.remove("animate-scale");
   };
+  const handleClick = (func) => {
+    func();
+    onClose();
+  };
 
   if (!visible) return null;
 
@@ -89,7 +93,15 @@ const CreateOptions = ({ options, visible, onClose }) => {
       ref={containerRef}
     >
       {options.map(({ title, onClick }) => {
-        return <Option onClick={onClick}>{title}</Option>;
+        return (
+          <Option
+            onClick={() => {
+              handleClick(onClick);
+            }}
+          >
+            {title}
+          </Option>
+        );
       })}
     </div>
   );

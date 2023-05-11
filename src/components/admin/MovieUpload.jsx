@@ -4,8 +4,9 @@ import { useNotification } from "../../hooks";
 import { uploadTrailer } from "../../api/movie";
 import { useState } from "react";
 import MovieForm from "./MovieForm";
+import ModalContainer from "../modals/ModalContainer";
 
-const MovieUpload = () => {
+const MovieUpload = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -42,9 +43,8 @@ const MovieUpload = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-primary bg-opacity-50 dark:bg-white dark:bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2 custom-scroll-bar">
-        {/* <UploadProgress
+    <ModalContainer visible={visible} onClose={onClose}>
+      {/* <UploadProgress
           visible={!videoUploaded && videoSelected}
           message={getUploadProgressValue()}
           width={uploadProgress}
@@ -54,10 +54,8 @@ const MovieUpload = () => {
           onTypeError={handleTypeError}
           handleChange={handleChange}
         /> */}
-
-        <MovieForm />
-      </div>
-    </div>
+      <MovieForm />
+    </ModalContainer>
   );
 };
 export default MovieUpload;
