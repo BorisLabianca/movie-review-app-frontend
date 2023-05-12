@@ -286,6 +286,7 @@ const MovieForm = () => {
           <PosterSelector
             name="poster"
             accept="image/jpg, image/jpeg, image/png"
+            label="Select poster"
             onChange={handleChange}
             selectedPoster={selectedPosterForUI}
           />
