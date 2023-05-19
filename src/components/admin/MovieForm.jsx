@@ -20,6 +20,7 @@ import DirectoSelector from "../DirectoSelector";
 import WriterSelector from "../WriterSelector";
 import ViewAllButton from "../ViewAllButton";
 import LabelWithBadge from "../LabelWithBadge";
+import { validateMovie } from "../../utils/validator";
 
 const defaultMovieInfo = {
   title: "",
@@ -36,65 +37,7 @@ const defaultMovieInfo = {
   status: "",
 };
 
-const validateMovie = (movieInfo) => {
-  const {
-    title,
-    storyLine,
-    tags,
-    cast,
-    director,
-    writers,
-    releaseDate,
-    genres,
-    type,
-    language,
-    status,
-  } = movieInfo;
-
-  if (!title.trim()) return { error: "The title is missing." };
-  if (!storyLine.trim()) return { error: "The storyline is missing." };
-
-  // Validation for tags, we are checking if tags is an array or not
-  if (!tags.length) return { error: "Tags are missing." };
-  // Checking if the array is filled with strings
-  for (let tag of tags) {
-    if (!tag.trim()) return { error: "Invalid tags." };
-  }
-
-  if (!director.name) return { error: "The director is missing." };
-
-  // Validation for writers, we are checking if writers is an array or not
-  if (!writers.length) return { error: "Writers are missing." };
-  // Checking if the array is filled with objects
-  for (let writer of writers) {
-    if (typeof writer !== "object") return { error: "Invalid writers." };
-  }
-
-  // Validation for cast, we are checking if cast is an array or not
-  if (!cast.length) return { error: "Cast & crew are missing." };
-  // Checking if the array is filled with objects
-  for (let c of cast) {
-    if (typeof c !== "object") return { error: "Invalid cast." };
-  }
-
-  if (!releaseDate.trim()) return { error: "The releaseDate is missing." };
-
-  // Validation for genres, we are checking if genres is an array or not
-  if (!genres.length) return { error: "Genres are missing." };
-  // Checking if the array is filled with strings
-  for (let genre of genres) {
-    if (!genre.trim()) return { error: "Invalid genres." };
-  }
-
-  if (!type.trim()) return { error: "The type is missing." };
-
-  if (!language.trim()) return { error: "The language is missing." };
-  if (!status.trim()) return { error: "The status is missing." };
-
-  return { error: null };
-};
-
-const MovieForm = () => {
+const MovieForm = ({ onSubmit, busy }) => {
   const { updateNotification } = useNotification();
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
@@ -106,8 +49,38 @@ const MovieForm = () => {
     event.preventDefault();
 
     const { error } = validateMovie(movieInfo);
-    if (error) return console.log(error);
-    console.log(movieInfo);
+    if (error) return updateNotification("error", error);
+
+    const { tags, genres, cast, writers, director, poster } = movieInfo;
+    const formData = new FormData();
+
+    const finalMovieInfo = {
+      ...movieInfo,
+    };
+
+    finalMovieInfo.tags = JSON.stringify(tags);
+    finalMovieInfo.genres = JSON.stringify(genres);
+
+    const finalCast = cast.map((c) => {
+      return {
+        actor: c.profile.id,
+        roleAs: c.roleAs,
+        leadActor: c.leadActor,
+      };
+    });
+    finalMovieInfo.cast = JSON.stringify(finalCast);
+
+    const finalWriters = writers.map((w) => w.id);
+    finalMovieInfo.writers = JSON.stringify(finalWriters);
+
+    finalMovieInfo.director = director.id;
+
+    if (poster) finalMovieInfo.poster = poster;
+    for (let key in finalMovieInfo) {
+      formData.append(key, finalMovieInfo[key]);
+    }
+
+    onSubmit(formData);
   };
 
   const updatePosterForUI = (file) => {
@@ -275,7 +248,12 @@ const MovieForm = () => {
             onChange={handleChange}
           />
 
-          <Submit value="Upload" onClick={handleSubmit} type="button" />
+          <Submit
+            busy={busy}
+            value="Upload"
+            onClick={handleSubmit}
+            type="button"
+          />
         </div>
         <div className="w-[30%] space-y-5">
           <PosterSelector
