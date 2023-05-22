@@ -1,62 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { getActors } from "../../api/actor";
+import { useNotification } from "../../hooks";
+import PaginationButtons from "../PaginationButtons";
+
+let defaultPageNumber = 0;
+const limit = 5;
 
 const Actors = () => {
+  const { updateNotification } = useNotification();
+  const [actors, setActors] = useState([]);
+  const [reachedEnd, setReachedEnd] = useState(false);
+
+  const fetchActors = async (pageNumber) => {
+    const { profiles, error } = await getActors(pageNumber, limit);
+    if (error) return updateNotification("error", error);
+    if (!profiles.length) {
+      defaultPageNumber = pageNumber - 1;
+      return setReachedEnd(true);
+    }
+    setActors([...profiles]);
+  };
+
+  const handleNextClick = () => {
+    if (reachedEnd) return;
+    defaultPageNumber += 1;
+    fetchActors(defaultPageNumber);
+  };
+
+  const handlePreviousClick = () => {
+    if (defaultPageNumber <= 0) return;
+    defaultPageNumber -= 1;
+    if (reachedEnd) setReachedEnd(false);
+    fetchActors(defaultPageNumber);
+  };
+
+  useEffect(() => {
+    fetchActors(defaultPageNumber);
+  }, []);
+
   return (
-    <div className="grid grid-cols-4 gap-3 my-5">
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
-      />
-      <ActorProfile
-        profile={{
-          name: "Jonh Doe",
-          avatar:
-            "https://images.unsplash.com/photo-1683093092507-928bd670af33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
-          about:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid voluptatibus est, laboriosam doloremque eveniet aspernatur, enim tenetur, tempore sequi eum illum quaerat saepe. Aliquam numquam voluptates ea impedit, repellat iste molestias quasi quidem quas quam vero suscipit tenetur illo ab quos eveniet cum nemo reprehenderit ipsum praesentium repellendus unde! Quia?",
-        }}
+    <div className="p-5">
+      <div className="grid grid-cols-4 gap-5 p-5">
+        {actors.map((actor) => {
+          return <ActorProfile profile={actor} key={actor.id} />;
+        })}
+      </div>
+      <PaginationButtons
+        className="mt-5"
+        onNextClick={handleNextClick}
+        onPreviousClick={handlePreviousClick}
       />
     </div>
   );
@@ -66,6 +59,7 @@ export default Actors;
 
 const ActorProfile = ({ profile }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const acceptedNameLength = 15;
 
   const handleOnMouseEnter = () => {
     setShowOptions(true);
@@ -75,6 +69,12 @@ const ActorProfile = ({ profile }) => {
     setShowOptions(false);
   };
   if (!profile) return null;
+
+  const getName = (name) => {
+    if (name.length <= acceptedNameLength) return name;
+    return name.substring(0, acceptedNameLength) + "...";
+  };
+
   const { name, avatar, about = "" } = profile;
 
   return (
@@ -91,10 +91,10 @@ const ActorProfile = ({ profile }) => {
         />
         <div className="px-2">
           <h1 className="text-xl text-primary dark:text-white font-semibold">
-            {name}
+            {getName(name)}
           </h1>
-          <p className="text-primary dark:text-white">
-            {about.substring(0, 50) + " ..."}
+          <p className="text-primary dark:text-white opacity-70">
+            {about.substring(0, 45)}
           </p>
         </div>
         <Options visible={showOptions} />

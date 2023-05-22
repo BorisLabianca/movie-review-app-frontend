@@ -30,3 +30,21 @@ export const searchActor = async (query) => {
     return catchError(error);
   }
 };
+
+export const getActors = async (pageNumber, limit) => {
+  const token = getToken();
+  try {
+    const { data } = await client.get(
+      `/actor/actors?pageNumber=${pageNumber}&limit=${limit}`,
+      {
+        headers: {
+          authorization: "Bearer " + token,
+          "content-type": "multipart/form-data",
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
