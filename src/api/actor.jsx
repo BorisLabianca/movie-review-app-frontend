@@ -48,3 +48,18 @@ export const getActors = async (pageNumber, limit) => {
     return catchError(error);
   }
 };
+
+export const updateActor = async (id, formData) => {
+  const token = getToken();
+  try {
+    const { data } = await client.put(`/actor/update/${id}`, formData, {
+      headers: {
+        authorization: "Bearer " + token,
+        "content-type": "multipart/form-data",
+      },
+    });
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};

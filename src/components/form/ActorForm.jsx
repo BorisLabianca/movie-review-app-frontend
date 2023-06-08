@@ -18,12 +18,14 @@ const genderOptions = [
   { title: "Other", value: "other" },
 ];
 
-const validateActor = ({ avatar, name, about, gender }) => {
+const validateActor = (actorInfo, initialState) => {
+  const { avatar, name, about, gender } = actorInfo;
   if (!name.trim()) return { error: "Actor name is missing." };
   if (!about.trim()) return { error: "The about section is missing." };
   if (!gender.trim()) return { error: "Actor gender is missing." };
-  if (!avatar) return { error: "The actor picture is missing." };
-  if (!avatar.type?.startsWith("image"))
+  if (!initialState && !avatar)
+    return { error: "The actor picture is missing." };
+  if (!initialState && !avatar?.type?.startsWith("image"))
     return { error: "Invalid image file." };
 
   return { error: null };
@@ -52,7 +54,7 @@ const ActorForm = ({ title, btnTitle, onSubmit, busy, initialState }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // console.log(actorInfo);
-    const { error } = validateActor(actorInfo);
+    const { error } = validateActor(actorInfo, initialState);
     if (error) return updateNotification("error", error);
     const formData = new FormData();
     for (let key in actorInfo) {
