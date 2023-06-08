@@ -3,6 +3,7 @@ import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { getActors } from "../../api/actor";
 import { useNotification } from "../../hooks";
 import PaginationButtons from "../PaginationButtons";
+import UpdateActor from "../modals/UpdateActor";
 
 let defaultPageNumber = 0;
 const limit = 5;
@@ -11,6 +12,8 @@ const Actors = () => {
   const { updateNotification } = useNotification();
   const [actors, setActors] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState(null);
 
   const fetchActors = async (pageNumber) => {
     const { profiles, error } = await getActors(pageNumber, limit);
@@ -35,29 +38,51 @@ const Actors = () => {
     fetchActors(defaultPageNumber);
   };
 
+  const handleOnEditClick = (profile) => {
+    setShowUpdateModal(true);
+    setSelectedProfile(profile);
+  };
+
+  const hideUpdateModal = () => {
+    setShowUpdateModal(false);
+  };
+
   useEffect(() => {
     fetchActors(defaultPageNumber);
   }, []);
 
   return (
-    <div className="p-5">
-      <div className="grid grid-cols-4 gap-5 p-5">
-        {actors.map((actor) => {
-          return <ActorProfile profile={actor} key={actor.id} />;
-        })}
+    <>
+      <div className="p-5">
+        <div className="grid grid-cols-4 gap-5 p-5">
+          {actors.map((actor) => {
+            return (
+              <ActorProfile
+                profile={actor}
+                key={actor.id}
+                onEditClick={() => handleOnEditClick(actor)}
+              />
+            );
+          })}
+        </div>
+        <PaginationButtons
+          className="mt-5"
+          onNextClick={handleNextClick}
+          onPreviousClick={handlePreviousClick}
+        />
       </div>
-      <PaginationButtons
-        className="mt-5"
-        onNextClick={handleNextClick}
-        onPreviousClick={handlePreviousClick}
+      <UpdateActor
+        visible={showUpdateModal}
+        onClose={hideUpdateModal}
+        initialState={selectedProfile}
       />
-    </div>
+    </>
   );
 };
 
 export default Actors;
 
-const ActorProfile = ({ profile }) => {
+const ActorProfile = ({ profile, onEditClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const acceptedNameLength = 15;
 
@@ -97,7 +122,7 @@ const ActorProfile = ({ profile }) => {
             {about.substring(0, 45)}
           </p>
         </div>
-        <Options visible={showOptions} />
+        <Options onEditClick={onEditClick} visible={showOptions} />
       </div>
     </div>
   );
