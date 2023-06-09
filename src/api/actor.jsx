@@ -22,9 +22,9 @@ export const searchActor = async (query) => {
     const { data } = await client.get(`/actor/search?name=${query}`, {
       headers: {
         authorization: "Bearer " + token,
-        "content-type": "multipart/form-data",
       },
     });
+    // console.log("From searchActor: ", data);
     return data;
   } catch (error) {
     return catchError(error);

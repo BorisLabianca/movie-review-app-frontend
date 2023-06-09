@@ -2,31 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useTheme } from "../../hooks";
 import ToggleThemeButton from "../ToggleThemeButton";
+import AppSearchForm from "../form/AppSearchForm";
 
 const Header = ({ onAddMovieClick, onAddActorClick }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const { toggleTheme } = useTheme();
+  // const { toggleTheme } = useTheme();
 
-  const getTheme = () => {
-    return localStorage.getItem("theme");
-  };
-  const [theme, setTheme] = useState(getTheme || "light");
-  const handleThemeButton = () => {
-    toggleTheme();
-    setTheme(theme === "light" ? "dark" : "light");
-  };
+  // const getTheme = () => {
+  //   return localStorage.getItem("theme");
+  // };
+  // const [theme, setTheme] = useState(getTheme || "light");
+  // const handleThemeButton = () => {
+  //   toggleTheme();
+  //   setTheme(theme === "light" ? "dark" : "light");
+  // };
 
   const options = [
     { title: "Add movie", onClick: onAddMovieClick },
     { title: "Add actor", onClick: onAddActorClick },
   ];
   return (
-    <div className="flex items-center justify-between relative">
-      <input
-        type="text"
-        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
-        placeholder="Search Movies..."
-      />
+    <div className="flex items-center justify-between relative p-5">
+      <AppSearchForm placeholder="Search Movies..." />
       <div className="flex items-center space-x-3">
         <ToggleThemeButton />
         <button

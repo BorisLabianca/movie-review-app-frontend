@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { getActors } from "../../api/actor";
-import { useNotification } from "../../hooks";
+import { getActors, searchActor } from "../../api/actor";
+import { useNotification, useSearch } from "../../hooks";
 import PaginationButtons from "../PaginationButtons";
 import UpdateActor from "../modals/UpdateActor";
+import AppSearchForm from "../form/AppSearchForm";
 
 let defaultPageNumber = 0;
-const limit = 5;
+const limit = 20;
 
 const Actors = () => {
   const { updateNotification } = useNotification();
+  const { handleSearch } = useSearch();
   const [actors, setActors] = useState([]);
+  const [results, setResults] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -46,6 +49,10 @@ const Actors = () => {
   const hideUpdateModal = () => {
     setShowUpdateModal(false);
   };
+  const handleOnSearchSubmit = (value) => {
+    handleSearch(searchActor, value, setResults);
+    // console.log(value);
+  };
 
   const handleOnActorUpdate = (profile) => {
     const updatedActors = actors.map((actor) => {
@@ -64,22 +71,36 @@ const Actors = () => {
   return (
     <>
       <div className="p-5">
-        <div className="grid grid-cols-4 gap-5 p-5">
-          {actors.map((actor) => {
-            return (
-              <ActorProfile
-                profile={actor}
-                key={actor.id}
-                onEditClick={() => handleOnEditClick(actor)}
-              />
-            );
-          })}
+        <div className="flex justify-end mb-5">
+          <AppSearchForm
+            placeholder="Search Actors..."
+            onSubmit={handleOnSearchSubmit}
+          />
         </div>
-        <PaginationButtons
-          className="mt-5"
-          onNextClick={handleNextClick}
-          onPreviousClick={handlePreviousClick}
-        />
+        <div className="grid grid-cols-4 gap-5">
+          {results.length
+            ? results.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                />
+              ))
+            : actors.map((actor) => (
+                <ActorProfile
+                  profile={actor}
+                  key={actor.id}
+                  onEditClick={() => handleOnEditClick(actor)}
+                />
+              ))}
+        </div>
+        {!results.length ? (
+          <PaginationButtons
+            className="mt-5"
+            onNextClick={handleNextClick}
+            onPreviousClick={handlePreviousClick}
+          />
+        ) : null}
       </div>
       <UpdateActor
         visible={showUpdateModal}
