@@ -74,6 +74,7 @@ const Actors = () => {
         <div className="flex justify-end mb-5">
           <AppSearchForm
             placeholder="Search Actors..."
+            showResetIcon={results.length}
             onSubmit={handleOnSearchSubmit}
           />
         </div>
