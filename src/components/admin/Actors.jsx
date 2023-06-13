@@ -5,13 +5,14 @@ import { useNotification, useSearch } from "../../hooks";
 import PaginationButtons from "../PaginationButtons";
 import UpdateActor from "../modals/UpdateActor";
 import AppSearchForm from "../form/AppSearchForm";
+import NotFoundText from "../NotFoundText";
 
 let defaultPageNumber = 0;
 const limit = 20;
 
 const Actors = () => {
   const { updateNotification } = useNotification();
-  const { handleSearch, resetSearch } = useSearch();
+  const { handleSearch, resetSearch, resultNotFound } = useSearch();
   const [actors, setActors] = useState([]);
   const [results, setResults] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
@@ -80,13 +81,16 @@ const Actors = () => {
         <div className="flex justify-end mb-5">
           <AppSearchForm
             placeholder="Search Actors..."
-            showResetIcon={results.length}
+            showResetIcon={results.length || resultNotFound}
             onSubmit={handleOnSearchSubmit}
             onReset={handleFormReset}
           />
         </div>
+
+        <NotFoundText text="Actor not found." visible={resultNotFound} />
+
         <div className="grid grid-cols-4 gap-5">
-          {results.length
+          {results.length || resultNotFound
             ? results.map((actor) => (
                 <ActorProfile
                   profile={actor}
@@ -102,7 +106,8 @@ const Actors = () => {
                 />
               ))}
         </div>
-        {!results.length > limit ? (
+
+        {!results.length && !resultNotFound ? (
           <PaginationButtons
             className="mt-5"
             onNextClick={handleNextClick}
