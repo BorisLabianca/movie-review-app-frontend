@@ -102,7 +102,7 @@ const Actors = () => {
                 />
               ))}
         </div>
-        {!results.length ? (
+        {!results.length > limit ? (
           <PaginationButtons
             className="mt-5"
             onNextClick={handleNextClick}
