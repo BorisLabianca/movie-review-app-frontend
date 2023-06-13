@@ -11,7 +11,7 @@ const limit = 20;
 
 const Actors = () => {
   const { updateNotification } = useNotification();
-  const { handleSearch } = useSearch();
+  const { handleSearch, resetSearch } = useSearch();
   const [actors, setActors] = useState([]);
   const [results, setResults] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
@@ -54,6 +54,12 @@ const Actors = () => {
     // console.log(value);
   };
 
+  const handleFormReset = () => {
+    resetSearch();
+    setResults([]);
+    // console.log(value);
+  };
+
   const handleOnActorUpdate = (profile) => {
     const updatedActors = actors.map((actor) => {
       if (profile.id === actor.id) {
@@ -76,6 +82,7 @@ const Actors = () => {
             placeholder="Search Actors..."
             showResetIcon={results.length}
             onSubmit={handleOnSearchSubmit}
+            onReset={handleFormReset}
           />
         </div>
         <div className="grid grid-cols-4 gap-5">
