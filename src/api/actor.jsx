@@ -25,6 +25,7 @@ export const searchActor = async (query) => {
       },
     });
     // console.log("From searchActor: ", data);
+    // console.log(data);
     return data;
   } catch (error) {
     return catchError(error);
@@ -43,6 +44,7 @@ export const getActors = async (pageNumber, limit) => {
         },
       }
     );
+    // console.log(data);
     return data;
   } catch (error) {
     return catchError(error);

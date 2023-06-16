@@ -14,19 +14,21 @@ const Actors = () => {
   const { updateNotification } = useNotification();
   const { handleSearch, resetSearch, resultNotFound } = useSearch();
   const [actors, setActors] = useState([]);
+  const [actorsCount, setActorsCount] = useState("");
   const [results, setResults] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
 
   const fetchActors = async (pageNumber) => {
-    const { profiles, error } = await getActors(pageNumber, limit);
+    const { profiles, actorsCount, error } = await getActors(pageNumber, limit);
     if (error) return updateNotification("error", error);
     if (!profiles.length) {
       defaultPageNumber = pageNumber - 1;
       return setReachedEnd(true);
     }
     setActors([...profiles]);
+    setActorsCount(actorsCount);
   };
 
   const handleNextClick = () => {
@@ -74,7 +76,6 @@ const Actors = () => {
   useEffect(() => {
     fetchActors(defaultPageNumber);
   }, []);
-
   return (
     <>
       <div className="p-5">
@@ -107,7 +108,7 @@ const Actors = () => {
               ))}
         </div>
 
-        {!results.length && !resultNotFound ? (
+        {!results.length && !resultNotFound && actorsCount > limit ? (
           <PaginationButtons
             className="mt-5"
             onNextClick={handleNextClick}
