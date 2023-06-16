@@ -65,3 +65,17 @@ export const updateActor = async (id, formData) => {
     return catchError(error);
   }
 };
+
+export const deleteActor = async (id) => {
+  const token = getToken();
+  try {
+    const { data } = await client.delete(`/actor/delete/${id}`, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};

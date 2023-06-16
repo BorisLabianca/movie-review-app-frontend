@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
-import { getActors, searchActor } from "../../api/actor";
+import { deleteActor, getActors, searchActor } from "../../api/actor";
 import { useNotification, useSearch } from "../../hooks";
 import PaginationButtons from "../PaginationButtons";
 import UpdateActor from "../modals/UpdateActor";
 import AppSearchForm from "../form/AppSearchForm";
 import NotFoundText from "../NotFoundText";
+import ConfirmModal from "../modals/ConfirmModal";
 
 let defaultPageNumber = 0;
 const limit = 20;
@@ -19,6 +20,8 @@ const Actors = () => {
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const fetchActors = async (pageNumber) => {
     const { profiles, actorsCount, error } = await getActors(pageNumber, limit);
@@ -73,6 +76,25 @@ const Actors = () => {
     setActors([...updatedActors]);
   };
 
+  const handleOnDeleteClick = (profile) => {
+    setSelectedProfile(profile);
+    setShowConfirmModal(true);
+  };
+
+  const hideCondirmModal = () => {
+    setShowConfirmModal(false);
+  };
+
+  const onDeleteConfirm = async () => {
+    setBusy(true);
+    const { error, message } = await deleteActor(selectedProfile.id);
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    hideCondirmModal();
+    fetchActors(defaultPageNumber);
+  };
+
   useEffect(() => {
     fetchActors(defaultPageNumber);
   }, []);
@@ -97,6 +119,7 @@ const Actors = () => {
                   profile={actor}
                   key={actor.id}
                   onEditClick={() => handleOnEditClick(actor)}
+                  onDeleteClick={() => handleOnDeleteClick(actor)}
                 />
               ))
             : actors.map((actor) => (
@@ -104,6 +127,7 @@ const Actors = () => {
                   profile={actor}
                   key={actor.id}
                   onEditClick={() => handleOnEditClick(actor)}
+                  onDeleteClick={() => handleOnDeleteClick(actor)}
                 />
               ))}
         </div>
@@ -116,6 +140,14 @@ const Actors = () => {
           />
         ) : null}
       </div>
+      <ConfirmModal
+        visible={showConfirmModal}
+        busy={busy}
+        title="Are you sure?"
+        subtitle="This action will remove this profile permanently."
+        onConfirm={onDeleteConfirm}
+        onCancel={hideCondirmModal}
+      />
       <UpdateActor
         visible={showUpdateModal}
         onClose={hideUpdateModal}
@@ -128,7 +160,7 @@ const Actors = () => {
 
 export default Actors;
 
-const ActorProfile = ({ profile, onEditClick }) => {
+const ActorProfile = ({ profile, onEditClick, onDeleteClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const acceptedNameLength = 15;
 
@@ -168,7 +200,11 @@ const ActorProfile = ({ profile, onEditClick }) => {
             {about.substring(0, 45)}
           </p>
         </div>
-        <Options onEditClick={onEditClick} visible={showOptions} />
+        <Options
+          onEditClick={onEditClick}
+          visible={showOptions}
+          onDeleteClick={onDeleteClick}
+        />
       </div>
     </div>
   );
