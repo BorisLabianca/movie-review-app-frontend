@@ -10,16 +10,18 @@ let defaultPageNumber = 0;
 const Movies = () => {
   const { updateNotification } = useNotification();
   const [movies, setMovies] = useState([]);
+  const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
 
   const fetchMovies = async (pageNumber) => {
-    const { error, movies } = await getMovies(pageNumber, limit);
+    const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
     if (error) return updateNotification("error", error);
     if (!movies.length) {
       defaultPageNumber = pageNumber - 1;
       return setReachedEnd(true);
     }
     setMovies([...movies]);
+    setCount(moviesCount);
   };
 
   const handleNextClick = () => {
@@ -35,6 +37,10 @@ const Movies = () => {
     fetchMovies(defaultPageNumber);
   };
 
+  const handleOnEditClick = (movie) => {
+    console.log(movie);
+  };
+
   useEffect(() => {
     fetchMovies(defaultPageNumber);
   }, []);
@@ -42,13 +48,21 @@ const Movies = () => {
   return (
     <div className="space-y-3 p-5">
       {movies.map((movie) => {
-        return <MovieListItem movie={movie} key={movie.id} />;
+        return (
+          <MovieListItem
+            movie={movie}
+            key={movie.id}
+            onEditClick={() => handleOnEditClick(movie)}
+          />
+        );
       })}
-      <PaginationButtons
-        className="mt-5"
-        onNextClick={handleNextClick}
-        onPreviousClick={handlePreviousClick}
-      />
+      {count > limit && (
+        <PaginationButtons
+          className="mt-5"
+          onNextClick={handleNextClick}
+          onPreviousClick={handlePreviousClick}
+        />
+      )}
     </div>
   );
 };

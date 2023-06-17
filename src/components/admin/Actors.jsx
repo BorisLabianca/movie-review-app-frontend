@@ -15,7 +15,7 @@ const Actors = () => {
   const { updateNotification } = useNotification();
   const { handleSearch, resetSearch, resultNotFound } = useSearch();
   const [actors, setActors] = useState([]);
-  const [actorsCount, setActorsCount] = useState("");
+  const [count, setCount] = useState("");
   const [results, setResults] = useState([]);
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -31,7 +31,7 @@ const Actors = () => {
       return setReachedEnd(true);
     }
     setActors([...profiles]);
-    setActorsCount(actorsCount);
+    setCount(actorsCount);
   };
 
   const handleNextClick = () => {
@@ -132,7 +132,7 @@ const Actors = () => {
               ))}
         </div>
 
-        {!results.length && !resultNotFound && actorsCount > limit ? (
+        {!results.length && !resultNotFound && count > limit ? (
           <PaginationButtons
             className="mt-5"
             onNextClick={handleNextClick}
