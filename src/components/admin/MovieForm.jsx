@@ -16,7 +16,7 @@ import {
   typeOptions,
 } from "../../utils/options";
 import Label from "../Label";
-import DirectoSelector from "../DirectoSelector";
+import DirectorSelector from "../DirectorSelector";
 import WriterSelector from "../WriterSelector";
 import ViewAllButton from "../ViewAllButton";
 import LabelWithBadge from "../LabelWithBadge";
@@ -214,7 +214,7 @@ const MovieForm = ({ onSubmit, busy }) => {
             <Label htmlFor="tags">Tags</Label>
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
-          <DirectoSelector onSelect={updateDirector} />
+          <DirectorSelector onSelect={updateDirector} />
           <div>
             <div className="flex justify-between">
               <LabelWithBadge badge={writers.length} htmlFor="writers">

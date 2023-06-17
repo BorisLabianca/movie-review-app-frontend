@@ -3,6 +3,7 @@ import { getMovies } from "../../api/movie";
 import { useNotification } from "../../hooks";
 import MovieListItem from "../MovieListItem";
 import PaginationButtons from "../PaginationButtons";
+import UpdateMovie from "../modals/UpdateMovie";
 
 const limit = 10;
 let defaultPageNumber = 0;
@@ -12,6 +13,7 @@ const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const fetchMovies = async (pageNumber) => {
     const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
@@ -39,6 +41,7 @@ const Movies = () => {
 
   const handleOnEditClick = (movie) => {
     console.log(movie);
+    setShowUpdateModal(true);
   };
 
   useEffect(() => {
@@ -46,24 +49,27 @@ const Movies = () => {
   }, []);
 
   return (
-    <div className="space-y-3 p-5">
-      {movies.map((movie) => {
-        return (
-          <MovieListItem
-            movie={movie}
-            key={movie.id}
-            onEditClick={() => handleOnEditClick(movie)}
+    <>
+      <div className="space-y-3 p-5">
+        {movies.map((movie) => {
+          return (
+            <MovieListItem
+              movie={movie}
+              key={movie.id}
+              onEditClick={() => handleOnEditClick(movie)}
+            />
+          );
+        })}
+        {count > limit && (
+          <PaginationButtons
+            className="mt-5"
+            onNextClick={handleNextClick}
+            onPreviousClick={handlePreviousClick}
           />
-        );
-      })}
-      {count > limit && (
-        <PaginationButtons
-          className="mt-5"
-          onNextClick={handleNextClick}
-          onPreviousClick={handlePreviousClick}
-        />
-      )}
-    </div>
+        )}
+      </div>
+      <UpdateMovie visible={showUpdateModal} />
+    </>
   );
 };
 
