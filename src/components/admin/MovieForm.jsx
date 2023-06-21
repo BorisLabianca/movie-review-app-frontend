@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { commonInputClasses } from "../../utils/theme";
 import TagsInput from "../TagsInput";
 import Submit from "../form/Submit";
@@ -37,7 +37,7 @@ const defaultMovieInfo = {
   status: "",
 };
 
-const MovieForm = ({ onSubmit, busy }) => {
+const MovieForm = ({ onSubmit, busy, initialState }) => {
   const { updateNotification } = useNotification();
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
@@ -105,6 +105,7 @@ const MovieForm = ({ onSubmit, busy }) => {
 
   const updateDirector = (profile) => {
     setMovieInfo({ ...movieInfo, director: profile });
+    console.log(profile);
   };
   const updateCast = (castInfo) => {
     const { cast } = movieInfo;
@@ -169,6 +170,18 @@ const MovieForm = ({ onSubmit, busy }) => {
     setShowGenresModal(true);
   };
 
+  useEffect(() => {
+    if (initialState) {
+      setMovieInfo({
+        ...initialState,
+        releaseDate: initialState.releaseDate.split("T")[0],
+        poster: null,
+      });
+      console.log(initialState);
+      setSelectedPosterForUI(initialState.poster);
+    }
+  }, [initialState]);
+
   const {
     title,
     storyLine,
@@ -179,6 +192,7 @@ const MovieForm = ({ onSubmit, busy }) => {
     type,
     language,
     status,
+    releaseDate,
   } = movieInfo;
 
   return (
@@ -246,6 +260,7 @@ const MovieForm = ({ onSubmit, busy }) => {
             name="releaseDate"
             className={commonInputClasses + " border-2 rounded p-1 w-auto"}
             onChange={handleChange}
+            value={releaseDate}
           />
 
           <Submit

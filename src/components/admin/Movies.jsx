@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMovies } from "../../api/movie";
+import { getMovieForUpdate, getMovies } from "../../api/movie";
 import { useNotification } from "../../hooks";
 import MovieListItem from "../MovieListItem";
 import PaginationButtons from "../PaginationButtons";
@@ -14,6 +14,7 @@ const Movies = () => {
   const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const fetchMovies = async (pageNumber) => {
     const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
@@ -39,8 +40,10 @@ const Movies = () => {
     fetchMovies(defaultPageNumber);
   };
 
-  const handleOnEditClick = (movie) => {
-    console.log(movie);
+  const handleOnEditClick = async ({ id }) => {
+    const { movie, error } = await getMovieForUpdate(id);
+    if (error) return updateNotification("error", error);
+    setSelectedMovie(movie);
     setShowUpdateModal(true);
   };
 
@@ -68,7 +71,7 @@ const Movies = () => {
           />
         )}
       </div>
-      <UpdateMovie visible={showUpdateModal} />
+      <UpdateMovie visible={showUpdateModal} initialState={selectedMovie} />
     </>
   );
 };

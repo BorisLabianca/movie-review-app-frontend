@@ -52,3 +52,17 @@ export const getMovies = async (pageNumber, limit) => {
     return catchError(error);
   }
 };
+
+export const getMovieForUpdate = async (id) => {
+  const token = getToken();
+  try {
+    const { data } = await client.get(`/movie/for-update/${id}`, {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    });
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
