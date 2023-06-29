@@ -37,7 +37,7 @@ const defaultMovieInfo = {
   status: "",
 };
 
-const MovieForm = ({ onSubmit, busy, initialState }) => {
+const MovieForm = ({ onSubmit, busy, initialState, btnTitle }) => {
   const { updateNotification } = useNotification();
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
@@ -265,7 +265,7 @@ const MovieForm = ({ onSubmit, busy, initialState }) => {
 
           <Submit
             busy={busy}
-            value="Upload"
+            value={btnTitle}
             onClick={handleSubmit}
             type="button"
           />
