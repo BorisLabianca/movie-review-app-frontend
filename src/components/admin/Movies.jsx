@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { getMovieForUpdate, getMovies } from "../../api/movie";
+import { deleteMovie, getMovieForUpdate, getMovies } from "../../api/movie";
 import { useNotification } from "../../hooks";
 import MovieListItem from "../MovieListItem";
 import PaginationButtons from "../PaginationButtons";
 import UpdateMovie from "../modals/UpdateMovie";
+import ConfirmModal from "../modals/ConfirmModal";
 
 const limit = 10;
 let defaultPageNumber = 0;
@@ -14,7 +15,9 @@ const Movies = () => {
   const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [busy, setBusy] = useState(false);
 
   const fetchMovies = async (pageNumber) => {
     const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
@@ -47,6 +50,21 @@ const Movies = () => {
     setShowUpdateModal(true);
   };
 
+  const handleOnDeleteClick = (movie) => {
+    setSelectedMovie(movie);
+    setShowConfirmModal(true);
+  };
+
+  const handleOnDeleteConfirm = async () => {
+    setBusy(true);
+    const { error, message } = await deleteMovie(selectedMovie.id);
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    hideConfirmModal();
+    fetchMovies(defaultPageNumber);
+  };
+
   const handleOnUpdate = (movie) => {
     const updatedMovies = movies.map((m) => {
       if (m.id === movie.id) return movie;
@@ -56,6 +74,7 @@ const Movies = () => {
   };
 
   const hideUpdateForm = () => setShowUpdateModal(false);
+  const hideConfirmModal = () => setShowConfirmModal(false);
 
   useEffect(() => {
     fetchMovies(defaultPageNumber);
@@ -70,6 +89,7 @@ const Movies = () => {
               movie={movie}
               key={movie.id}
               onEditClick={() => handleOnEditClick(movie)}
+              onDeleteClick={() => handleOnDeleteClick(movie)}
             />
           );
         })}
@@ -81,6 +101,14 @@ const Movies = () => {
           />
         )}
       </div>
+      <ConfirmModal
+        visible={showConfirmModal}
+        onConfirm={handleOnDeleteConfirm}
+        onCancel={hideConfirmModal}
+        title="Are you sure?"
+        subtitle="This action will remove this movie permanently."
+        busy={busy}
+      />
       <UpdateMovie
         visible={showUpdateModal}
         initialState={selectedMovie}
