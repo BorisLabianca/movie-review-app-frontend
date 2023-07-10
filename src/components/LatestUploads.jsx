@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { deleteMovie, getMovies } from "../api/movie";
+import { deleteMovie, getMovieForUpdate, getMovies } from "../api/movie";
 import { useNotification } from "../hooks";
 import MovieListItem from "./MovieListItem";
 import ConfirmModal from "./modals/ConfirmModal";
+import UpdateMovie from "./modals/UpdateMovie";
 
 const pageNumber = 0;
 const limit = 5;
@@ -12,6 +13,7 @@ const LatestUploads = () => {
   const [latestMovies, setLatestMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [busy, setBusy] = useState(false);
   const fetchLatestUploads = async () => {
     const { error, movies } = await getMovies(pageNumber, limit);
@@ -25,9 +27,19 @@ const LatestUploads = () => {
     setSelectedMovie(latestMovie);
     setShowConfirmModal(true);
   };
+  const handleOnEditClick = async ({ id }) => {
+    const { error, movie } = await getMovieForUpdate(id);
+    setShowUpdateModal(true);
+    if (error) return updateNotification("error", error);
+    setSelectedMovie(movie);
+  };
 
   const hideConfirmModal = () => {
     setShowConfirmModal(false);
+  };
+
+  const hideUpdateModal = () => {
+    setShowUpdateModal(false);
   };
 
   const handleOnDeleteConfirm = async () => {
@@ -38,6 +50,15 @@ const LatestUploads = () => {
     updateNotification("success", message);
     fetchLatestUploads();
     hideConfirmModal();
+  };
+
+  const handleOnUpdate = (latesMovie) => {
+    const updatedMovies = latestMovies.map((m) => {
+      if (m.id === latesMovie.id) return latesMovie;
+      return m;
+    });
+
+    setLatestMovies([...updatedMovies]);
   };
 
   useEffect(() => {
@@ -57,6 +78,7 @@ const LatestUploads = () => {
                     movie={latestMovie}
                     key={latestMovie.id}
                     onDeleteClick={() => handleOnDeleteClick(latestMovie)}
+                    onEditClick={() => handleOnEditClick(latestMovie)}
                   />
                 );
               })
@@ -70,6 +92,12 @@ const LatestUploads = () => {
         onCancel={hideConfirmModal}
         onConfirm={handleOnDeleteConfirm}
         busy={busy}
+      />
+      <UpdateMovie
+        visible={showUpdateModal}
+        onClose={hideUpdateModal}
+        initialState={selectedMovie}
+        onSuccess={handleOnUpdate}
       />
     </>
   );
