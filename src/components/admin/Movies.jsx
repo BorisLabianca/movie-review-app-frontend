@@ -108,6 +108,7 @@ const Movies = () => {
         title="Are you sure?"
         subtitle="This action will remove this movie permanently."
         busy={busy}
+        onClose={hideConfirmModal}
       />
       <UpdateMovie
         visible={showUpdateModal}

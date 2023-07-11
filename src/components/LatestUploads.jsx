@@ -92,6 +92,7 @@ const LatestUploads = () => {
         onCancel={hideConfirmModal}
         onConfirm={handleOnDeleteConfirm}
         busy={busy}
+        onClose={hideConfirmModal}
       />
       <UpdateMovie
         visible={showUpdateModal}

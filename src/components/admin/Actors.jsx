@@ -147,6 +147,7 @@ const Actors = () => {
         subtitle="This action will remove this profile permanently."
         onConfirm={onDeleteConfirm}
         onCancel={hideCondirmModal}
+        onClose={hideCondirmModal}
       />
       <UpdateActor
         visible={showUpdateModal}
