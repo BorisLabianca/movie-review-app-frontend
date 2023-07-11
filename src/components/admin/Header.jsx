@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useTheme } from "../../hooks";
+// import { useTheme } from "../../hooks";
 import ToggleThemeButton from "../ToggleThemeButton";
 import AppSearchForm from "../form/AppSearchForm";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ onAddMovieClick, onAddActorClick }) => {
+  const navigate = useNavigate();
   const [showOptions, setShowOptions] = useState(false);
   // const { toggleTheme } = useTheme();
 
@@ -21,9 +23,19 @@ const Header = ({ onAddMovieClick, onAddActorClick }) => {
     { title: "Add movie", onClick: onAddMovieClick },
     { title: "Add actor", onClick: onAddActorClick },
   ];
+
+  const handleSearchSubmit = (query) => {
+    if (!query.trim()) return;
+
+    navigate("/search?title=" + query);
+  };
+
   return (
     <div className="flex items-center justify-between relative p-5">
-      <AppSearchForm placeholder="Search Movies..." />
+      <AppSearchForm
+        placeholder="Search Movies..."
+        onSubmit={handleSearchSubmit}
+      />
       <div className="flex items-center space-x-3">
         <ToggleThemeButton />
         <button
