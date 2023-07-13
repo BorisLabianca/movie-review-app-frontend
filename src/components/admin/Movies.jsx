@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { deleteMovie, getMovieForUpdate, getMovies } from "../../api/movie";
-import { useNotification } from "../../hooks";
+import { useMovies, useNotification } from "../../hooks";
 import MovieListItem from "../MovieListItem";
 import PaginationButtons from "../PaginationButtons";
 import UpdateMovie from "../modals/UpdateMovie";
@@ -11,6 +11,12 @@ let defaultPageNumber = 0;
 
 const Movies = () => {
   const { updateNotification } = useNotification();
+  const {
+    fetchMovies,
+    movies: newMovies,
+    fetchPreviousPage,
+    fetchNextPage,
+  } = useMovies();
   const [movies, setMovies] = useState([]);
   const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
@@ -19,29 +25,29 @@ const Movies = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [busy, setBusy] = useState(false);
 
-  const fetchMovies = async (pageNumber) => {
-    const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
-    if (error) return updateNotification("error", error);
-    if (!movies.length) {
-      defaultPageNumber = pageNumber - 1;
-      return setReachedEnd(true);
-    }
-    setMovies([...movies]);
-    setCount(moviesCount);
-  };
+  // const fetchMovies = async (pageNumber) => {
+  //   const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
+  //   if (error) return updateNotification("error", error);
+  //   if (!movies.length) {
+  //     defaultPageNumber = pageNumber - 1;
+  //     return setReachedEnd(true);
+  //   }
+  //   setMovies([...movies]);
+  //   setCount(moviesCount);
+  // };
 
-  const handleNextClick = () => {
-    if (reachedEnd) return;
-    defaultPageNumber += 1;
-    fetchMovies(defaultPageNumber);
-  };
+  // const handleNextClick = () => {
+  //   if (reachedEnd) return;
+  //   defaultPageNumber += 1;
+  //   fetchMovies(defaultPageNumber);
+  // };
 
-  const handlePreviousClick = () => {
-    if (defaultPageNumber <= 0) return;
-    defaultPageNumber -= 1;
-    if (reachedEnd) setReachedEnd(false);
-    fetchMovies(defaultPageNumber);
-  };
+  // const handlePreviousClick = () => {
+  //   if (defaultPageNumber <= 0) return;
+  //   defaultPageNumber -= 1;
+  //   if (reachedEnd) setReachedEnd(false);
+  //   fetchMovies(defaultPageNumber);
+  // };
 
   const handleOnEditClick = async ({ id }) => {
     const { movie, error } = await getMovieForUpdate(id);
@@ -83,7 +89,7 @@ const Movies = () => {
   return (
     <>
       <div className="space-y-3 p-5">
-        {movies.map((movie) => {
+        {newMovies.map((movie) => {
           return (
             <MovieListItem
               movie={movie}
@@ -96,8 +102,8 @@ const Movies = () => {
         {count > limit && (
           <PaginationButtons
             className="mt-5"
-            onNextClick={handleNextClick}
-            onPreviousClick={handlePreviousClick}
+            onNextClick={fetchNextPage}
+            onPreviousClick={fetchPreviousPage}
           />
         )}
       </div>
