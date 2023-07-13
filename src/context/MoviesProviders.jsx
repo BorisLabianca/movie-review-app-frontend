@@ -10,8 +10,17 @@ let defaultPageNumber = 0;
 const MoviesProviders = ({ children }) => {
   const { updateNotification } = useNotification();
   const [movies, setMovies] = useState([]);
+  const [latestUploads, setLatestUploads] = useState([]);
   const [count, setCount] = useState("");
   const [reachedEnd, setReachedEnd] = useState(false);
+
+  const fetchLatestUploads = async (quantity = 5) => {
+    const { error, movies } = await getMovies(0, quantity);
+
+    if (error) return updateNotification("error", error);
+
+    setLatestUploads([...movies]);
+  };
 
   const fetchMovies = async (pageNumber) => {
     const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
@@ -46,6 +55,8 @@ const MoviesProviders = ({ children }) => {
         fetchPreviousPage,
         count,
         limit,
+        latestUploads,
+        fetchLatestUploads,
       }}
     >
       {children}

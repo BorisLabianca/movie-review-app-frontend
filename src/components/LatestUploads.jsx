@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { deleteMovie, getMovieForUpdate, getMovies } from "../api/movie";
-import { useNotification } from "../hooks";
+import { useMovies, useNotification } from "../hooks";
 import MovieListItem from "./MovieListItem";
 import ConfirmModal from "./modals/ConfirmModal";
 import UpdateMovie from "./modals/UpdateMovie";
@@ -10,18 +10,19 @@ const limit = 5;
 
 const LatestUploads = () => {
   const { updateNotification } = useNotification();
+  const { fetchLatestUploads, latestUploads } = useMovies();
   const [latestMovies, setLatestMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [busy, setBusy] = useState(false);
-  const fetchLatestUploads = async () => {
-    const { error, movies } = await getMovies(pageNumber, limit);
+  // const fetchLatestUploads = async () => {
+  //   const { error, movies } = await getMovies(pageNumber, limit);
 
-    if (error) return updateNotification("error", error);
+  //   if (error) return updateNotification("error", error);
 
-    setLatestMovies([...movies]);
-  };
+  //   setLatestMovies([...movies]);
+  // };
 
   const handleOnDeleteClick = (latestMovie) => {
     setSelectedMovie(latestMovie);
@@ -71,8 +72,8 @@ const LatestUploads = () => {
           Recent Uploads
         </h1>
         <div className="space-y-3">
-          {latestMovies
-            ? latestMovies.map((latestMovie) => {
+          {latestUploads
+            ? latestUploads.map((latestMovie) => {
                 return (
                   <MovieListItem
                     movie={latestMovie}
