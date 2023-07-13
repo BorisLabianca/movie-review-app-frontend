@@ -6,7 +6,7 @@ import PaginationButtons from "../PaginationButtons";
 import UpdateMovie from "../modals/UpdateMovie";
 import ConfirmModal from "../modals/ConfirmModal";
 
-const limit = 10;
+// const limit = 10;
 let defaultPageNumber = 0;
 
 const Movies = () => {
@@ -16,10 +16,12 @@ const Movies = () => {
     movies: newMovies,
     fetchPreviousPage,
     fetchNextPage,
+    count,
+    limit,
   } = useMovies();
   const [movies, setMovies] = useState([]);
-  const [count, setCount] = useState("");
-  const [reachedEnd, setReachedEnd] = useState(false);
+  // const [count, setCount] = useState("");
+  // const [reachedEnd, setReachedEnd] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);

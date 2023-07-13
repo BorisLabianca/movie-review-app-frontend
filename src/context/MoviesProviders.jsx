@@ -39,7 +39,14 @@ const MoviesProviders = ({ children }) => {
 
   return (
     <MovieContext.Provider
-      value={{ movies, fetchMovies, fetchNextPage, fetchPreviousPage }}
+      value={{
+        movies,
+        fetchMovies,
+        fetchNextPage,
+        fetchPreviousPage,
+        count,
+        limit,
+      }}
     >
       {children}
     </MovieContext.Provider>
