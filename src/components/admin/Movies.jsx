@@ -84,7 +84,7 @@ const Movies = () => {
   // const hideUpdateForm = () => setShowUpdateModal(false);
   // const hideConfirmModal = () => setShowConfirmModal(false);
 
-  const handleAfterDelete = () => fetchMovies();
+  const handleUiUpdate = () => fetchMovies();
 
   useEffect(() => {
     fetchMovies(defaultPageNumber);
@@ -98,7 +98,8 @@ const Movies = () => {
             <MovieListItem
               movie={movie}
               key={movie.id}
-              afterDelete={handleAfterDelete}
+              afterDelete={handleUiUpdate}
+              afterUpdate={handleUiUpdate}
               // onEditClick={() => handleOnEditClick(movie)}
               // onDeleteClick={() => handleOnDeleteClick(movie)}
             />

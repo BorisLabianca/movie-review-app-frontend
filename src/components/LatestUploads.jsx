@@ -62,7 +62,7 @@ const LatestUploads = () => {
   //   setLatestMovies([...updatedMovies]);
   // };
 
-  const handleAfterDelete = () => fetchLatestUploads();
+  const handleUiUpdate = () => fetchLatestUploads();
 
   useEffect(() => {
     fetchLatestUploads();
@@ -80,7 +80,8 @@ const LatestUploads = () => {
                   <MovieListItem
                     movie={latestMovie}
                     key={latestMovie.id}
-                    afterDelete={handleAfterDelete}
+                    afterDelete={handleUiUpdate}
+                    afterUpdate={handleUiUpdate}
                     // onDeleteClick={() => handleOnDeleteClick(latestMovie)}
                     // onEditClick={() => handleOnEditClick(latestMovie)}
                   />

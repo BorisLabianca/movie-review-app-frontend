@@ -2,11 +2,15 @@ import { BsBoxArrowUpRight, BsPencilSquare, BsTrash } from "react-icons/bs";
 import ConfirmModal from "./modals/ConfirmModal";
 import { useState } from "react";
 import { useNotification } from "../hooks";
+import UpdateMovie from "./modals/UpdateMovie";
+// import { getMovieForUpdate } from "../api/movie";
 
-const MovieListItem = ({ movie, afterDelete }) => {
+const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
   const { updateNotification } = useNotification();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
 
   const handleOnDeleteConfirm = async () => {
     setBusy(true);
@@ -18,12 +22,28 @@ const MovieListItem = ({ movie, afterDelete }) => {
     hideConfirmModal();
   };
 
+  const handleOnEditClick = async () => {
+    setShowUpdateModal(true);
+    setSelectedMovieId(movie.id);
+  };
+
+  const handleOnUpdate = async (movie) => {
+    afterUpdate(movie);
+    setShowUpdateModal(false);
+    setSelectedMovieId(null);
+  };
+
   const displayConfirmModal = () => setShowConfirmModal(true);
   const hideConfirmModal = () => setShowConfirmModal(false);
+  const hideUpdateModal = () => setShowUpdateModal(false);
 
   return (
     <>
-      <MovieCard movie={movie} onDeleteClick={displayConfirmModal} />
+      <MovieCard
+        movie={movie}
+        onDeleteClick={displayConfirmModal}
+        onEditClick={handleOnEditClick}
+      />
       <div className="p-0">
         <ConfirmModal
           visible={showConfirmModal}
@@ -33,6 +53,12 @@ const MovieListItem = ({ movie, afterDelete }) => {
           subtitle="This action will remove this movie permanently."
           busy={busy}
           onClose={hideConfirmModal}
+        />
+        <UpdateMovie
+          movieId={selectedMovieId}
+          visible={showUpdateModal}
+          onClose={hideUpdateModal}
+          onSuccess={handleOnUpdate}
         />
       </div>
     </>
