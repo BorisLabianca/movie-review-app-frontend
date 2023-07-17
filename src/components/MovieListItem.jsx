@@ -1,6 +1,45 @@
 import { BsBoxArrowUpRight, BsPencilSquare, BsTrash } from "react-icons/bs";
+import ConfirmModal from "./modals/ConfirmModal";
+import { useState } from "react";
+import { useNotification } from "../hooks";
 
-const MovieListItem = ({ movie, onDeleteClick, onEditClick, onOpenClick }) => {
+const MovieListItem = ({ movie, afterDelete }) => {
+  const { updateNotification } = useNotification();
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const handleOnDeleteConfirm = async () => {
+    setBusy(true);
+    const { error, message } = await deleteMovie(movie.id);
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    afterDelete(movie);
+    hideConfirmModal();
+  };
+
+  const displayConfirmModal = () => setShowConfirmModal(true);
+  const hideConfirmModal = () => setShowConfirmModal(false);
+
+  return (
+    <>
+      <MovieCard movie={movie} onDeleteClick={displayConfirmModal} />
+      <div className="p-0">
+        <ConfirmModal
+          visible={showConfirmModal}
+          onConfirm={handleOnDeleteConfirm}
+          onCancel={hideConfirmModal}
+          title="Are you sure?"
+          subtitle="This action will remove this movie permanently."
+          busy={busy}
+          onClose={hideConfirmModal}
+        />
+      </div>
+    </>
+  );
+};
+
+const MovieCard = ({ movie, onDeleteClick, onEditClick, onOpenClick }) => {
   const { poster, title, genres = [], status } = movie;
   return (
     <table className="w-full border-b">

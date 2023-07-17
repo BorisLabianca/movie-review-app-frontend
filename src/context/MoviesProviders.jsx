@@ -22,7 +22,7 @@ const MoviesProviders = ({ children }) => {
     setLatestUploads([...movies]);
   };
 
-  const fetchMovies = async (pageNumber) => {
+  const fetchMovies = async (pageNumber = defaultPageNumber) => {
     const { error, movies, moviesCount } = await getMovies(pageNumber, limit);
     if (error) return updateNotification("error", error);
     if (!movies.length) {
