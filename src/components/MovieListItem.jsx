@@ -17,9 +17,9 @@ const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
     const { error, message } = await deleteMovie(movie.id);
     setBusy(false);
     if (error) return updateNotification("error", error);
+    hideConfirmModal();
     updateNotification("success", message);
     afterDelete(movie);
-    hideConfirmModal();
   };
 
   const handleOnEditClick = async () => {
