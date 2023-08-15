@@ -52,8 +52,8 @@ const MovieUpload = ({ visible, onClose }) => {
     movieInfo.append("trailer", JSON.stringify(trailerInfo));
     const response = await uploadMovie(movieInfo);
     setBusy(false);
-    console.log(response);
-
+    console.log("MovieUpload CLG: ", response);
+    if (response.error) updateNotification("error", response.error);
     onClose();
   };
 
