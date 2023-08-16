@@ -17,7 +17,7 @@ const Navbar = () => {
           </Link>
           <ul className="flex items-center space-x-4">
             <li>
-              <ToggleThemeButton />
+              <ToggleThemeButton header={false} />
             </li>
             <li>
               <input

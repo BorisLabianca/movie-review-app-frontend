@@ -37,7 +37,7 @@ const Header = ({ onAddMovieClick, onAddActorClick }) => {
         onSubmit={handleSearchSubmit}
       />
       <div className="flex items-center space-x-3">
-        <ToggleThemeButton />
+        <ToggleThemeButton header={true} />
         <button
           className="flex items-center space-x-2 dark:border-dark-subtle border-light-subtle dark:text-dark-subtle text-light-subtle border-secondary text-secondary hover:opacity-80 transition font-semibold border-2 rounded text-lg px-3 py-1"
           onClick={() => {

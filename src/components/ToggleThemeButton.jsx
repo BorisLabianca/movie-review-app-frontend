@@ -2,7 +2,7 @@ import { useState } from "react";
 import { BsSunFill, BsMoonFill } from "react-icons/bs";
 import { useTheme } from "../hooks";
 
-const ToggleThemeButton = () => {
+const ToggleThemeButton = ({ header }) => {
   const { toggleTheme } = useTheme();
   const getTheme = () => {
     return localStorage.getItem("theme");
@@ -14,7 +14,11 @@ const ToggleThemeButton = () => {
   };
   return (
     <button
-      className="dark:text-white text-light-subtle p-1 rounded"
+      className={
+        !header
+          ? "text-secondary p-1 rounded bg-white"
+          : "dark:text-white text-light-subtle p-1 rounded"
+      }
       onClick={handleThemeButton}
     >
       {theme === "light" ? (
