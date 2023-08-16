@@ -92,6 +92,11 @@ const MovieForm = ({ onSubmit, busy, initialState, btnTitle }) => {
     const { value, name, files } = target;
     if (name === "poster") {
       const poster = files[0];
+      if (poster.size > 10485760)
+        return updateNotification(
+          "error",
+          "The file size is too big. Please select a smaller poster."
+        );
       updatePosterForUI(poster);
       return setMovieInfo({ ...movieInfo, poster });
     }
