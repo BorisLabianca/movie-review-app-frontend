@@ -3,11 +3,11 @@ import { useNotification } from "../../hooks";
 import { useEffect, useState } from "react";
 import MovieList from "./MovieList";
 
-const TopRatedMovies = () => {
+const TopRatedWebSeries = () => {
   const { updateNotification } = useNotification();
   const [movies, setMovies] = useState([]);
   const fetchMovies = async () => {
-    const { error, movies } = await getTopRatedMovies();
+    const { error, movies } = await getTopRatedMovies("Web Series");
     if (error) return updateNotification("error", error);
 
     setMovies([...movies]);
@@ -16,7 +16,7 @@ const TopRatedMovies = () => {
   useEffect(() => {
     fetchMovies();
   }, []);
-  return <MovieList movies={movies} title="Viewers choice (movies)" />;
+  return <MovieList movies={movies} title="Viewers choice (Web Series)" />;
 };
 
-export default TopRatedMovies;
+export default TopRatedWebSeries;
