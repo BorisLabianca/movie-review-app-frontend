@@ -11,6 +11,7 @@ const Home = () => {
       <Container className=" px-2 xl:p-0">
         <NotVerified />
         <HeroSlideShow />
+        <div className="space-y-3 py-8"></div>
         <TopRatedMovies />
         <TopRatedWebSeries />
         <TopRatedTVSeries />
