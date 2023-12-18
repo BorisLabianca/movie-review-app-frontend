@@ -135,9 +135,10 @@ const HeroSlideShow = () => {
         <h1 className="font-semibold text-2xl text-primary dark:text-white">
           Up Next
         </h1>
-        {upNext.map(({ poster }) => {
+        {upNext.map(({ poster, id }) => {
           return (
             <img
+              key={id}
               src={poster}
               alt=""
               className="aspect-video object-cover rounded"
