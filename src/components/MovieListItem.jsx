@@ -3,6 +3,7 @@ import ConfirmModal from "./modals/ConfirmModal";
 import { useState } from "react";
 import { useNotification } from "../hooks";
 import UpdateMovie from "./modals/UpdateMovie";
+import { getPoster } from "../utils/helper";
 // import { getMovieForUpdate } from "../api/movie";
 
 const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
@@ -66,14 +67,18 @@ const MovieListItem = ({ movie, afterDelete, afterUpdate }) => {
 };
 
 const MovieCard = ({ movie, onDeleteClick, onEditClick, onOpenClick }) => {
-  const { poster, title, genres = [], status } = movie;
+  const { poster, responsivePosters, title, genres = [], status } = movie;
   return (
     <table className="w-full border-b">
       <tbody>
         <tr>
           <td>
             <div className="w-24">
-              <img src={poster} alt={title} className="w-full aspect-video" />
+              <img
+                src={getPoster(responsivePosters) || poster}
+                alt={title}
+                className="w-full aspect-video"
+              />
             </div>
           </td>
           <td className="w-full pl-5">

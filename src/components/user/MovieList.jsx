@@ -2,6 +2,7 @@ import { AiFillStar } from "react-icons/ai";
 import GridContainer from "../GridContainer";
 import { Link } from "react-router-dom";
 import RatingStar from "../RatingStar";
+import { getPoster } from "../../utils/helper";
 
 const trimTitle = (text = "") => {
   if (text.length <= 20) return text;
@@ -25,10 +26,14 @@ const MovieList = ({ title, movies = [] }) => {
 };
 
 const ListItem = ({ movie }) => {
-  const { id, title, poster, reviews } = movie;
+  const { id, responsivePosters, title, poster, reviews } = movie;
   return (
     <Link to={`/movie/${id}`}>
-      <img src={poster} alt={title} className="object-cover aspect-video" />
+      <img
+        src={getPoster(responsivePosters) || poster}
+        alt={title}
+        className="object-cover aspect-video"
+      />
       <h1
         title={title}
         className="text-lg dark:text-white text-secondary font-semibold"

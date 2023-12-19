@@ -15,6 +15,14 @@ const MovieUpload = ({ visible, onClose }) => {
   const [busy, setBusy] = useState(false);
 
   const { updateNotification } = useNotification();
+
+  const resetStates = () => {
+    setVideoSelected(false);
+    setVideoUploaded(false);
+    setUploadProgress(0);
+    setTrailerInfo({});
+  };
+
   const handleTypeError = (error) => {
     updateNotification("error", error);
   };
@@ -50,10 +58,12 @@ const MovieUpload = ({ visible, onClose }) => {
       return updateNotification("error", "The trailer is missing.");
     setBusy(true);
     movieInfo.append("trailer", JSON.stringify(trailerInfo));
-    const response = await uploadMovie(movieInfo);
+    const { response } = await uploadMovie(movieInfo);
     setBusy(false);
     console.log("MovieUpload CLG: ", response);
-    if (response.error) updateNotification("error", response.error);
+    if (response.error) return updateNotification("error", response.error);
+    updateNotification("success", "Movie uploaded successfully.");
+    resetStates();
     onClose();
   };
 
@@ -95,10 +105,10 @@ const TrailerSelector = ({ visible, handleChange, onTypeError }) => {
         types={["mp4", "avi"]}
         onTypeError={onTypeError}
       >
-        <div className="w-48 h-48 border border-dashed dark:border-dark-subtle border-light-subtle rounded-full flex flex-col items-center justify-center text-secondary dark:text-dark-subtle cursor-pointer">
+        <label className="w-48 h-48 border border-dashed dark:border-dark-subtle border-light-subtle rounded-full flex flex-col items-center justify-center text-secondary dark:text-dark-subtle cursor-pointer">
           <AiOutlineCloudUpload size={80} />
           <p>Drop your file here.</p>
-        </div>
+        </label>
       </FileUploader>
     </div>
   );
