@@ -7,6 +7,7 @@ import RatingStar from "../RatingStar";
 import RelatedMovies from "../RelatedMovies";
 import AddRatingModal from "../modals/AddRatingModal";
 import CustomButtonLink from "../CustomButtonLink";
+import ProfileModal from "../modals/ProfileModal";
 
 const convertReviewCount = (count) => {
   if (count <= 999) return count;
@@ -26,6 +27,8 @@ const SingleMovie = () => {
   const [movie, setMovie] = useState({});
   const [ready, setReady] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState({});
 
   const fetchMovie = async () => {
     const { error, movie } = await getSingleMovie(movieId);
@@ -45,6 +48,15 @@ const SingleMovie = () => {
 
   const handleOnRatingSuccess = (reviews) => {
     setMovie({ ...movie, reviews: { ...reviews } });
+  };
+
+  const handleProfileClick = (profile) => {
+    setSelectedProfile(profile);
+    setShowProfileModal(true);
+  };
+
+  const hideProfileModal = () => {
+    setShowProfileModal(false);
   };
 
   useEffect(() => {
@@ -107,7 +119,10 @@ const SingleMovie = () => {
             Storyline: {storyLine}
           </p>
           <ListWithLabel label="Director:">
-            <CustomButtonLink label={director.name} />
+            <CustomButtonLink
+              label={director.name}
+              onClick={() => handleProfileClick(director)}
+            />
           </ListWithLabel>
 
           <ListWithLabel label="Writers:">
@@ -149,6 +164,12 @@ const SingleMovie = () => {
           <RelatedMovies movieId={movieId} />
         </div>
       </Container>
+
+      <ProfileModal
+        visible={showProfileModal}
+        onClose={hideProfileModal}
+        profileId={selectedProfile.id}
+      />
 
       <AddRatingModal
         visible={showRatingModal}

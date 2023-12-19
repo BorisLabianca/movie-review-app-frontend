@@ -79,3 +79,12 @@ export const deleteActor = async (id) => {
     return catchError(error);
   }
 };
+
+export const getProfile = async (id) => {
+  try {
+    const { data } = await client.get(`/actor/single/${id}`);
+    return data;
+  } catch (error) {
+    return catchError(error);
+  }
+};
