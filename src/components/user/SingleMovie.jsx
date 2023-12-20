@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSingleMovie } from "../../api/movie";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth, useNotification } from "../../hooks";
 import Container from "../Container";
 import RatingStar from "../RatingStar";
@@ -91,7 +91,7 @@ const SingleMovie = () => {
   return (
     <div className="dark:bg-primary bg-white min-h-screen pb-10">
       <Container className="max-2xl:px-5">
-        <video poster={poster} src={trailer} controls></video>
+        <video poster={poster} controls src={trailer} />
         <div className="flex justify-between">
           <h1 className="xl:text-4xl lg:text-3xl text-2xl text-highlight dark:text-highlight-dark font-semibold py-3">
             {title}
