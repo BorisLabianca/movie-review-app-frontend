@@ -8,11 +8,7 @@ import RelatedMovies from "../RelatedMovies";
 import AddRatingModal from "../modals/AddRatingModal";
 import CustomButtonLink from "../CustomButtonLink";
 import ProfileModal from "../modals/ProfileModal";
-
-const convertReviewCount = (count) => {
-  if (count <= 999) return count;
-  parseFloat(count / 1000).toFixed(2) + "K";
-};
+import { convertReviewCount } from "../../utils/helper";
 
 const convertDate = (date = "") => {
   return date.split("T")[0];

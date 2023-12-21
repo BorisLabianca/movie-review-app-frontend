@@ -3,6 +3,7 @@ import AppInfoBox from "../AppInfoBox";
 import LatestUploads from "../LatestUploads";
 import { getAppInfo } from "../../api/admin";
 import { useNotification } from "../../hooks";
+import MostRatedMovies from "../MostRatedMovies";
 
 const Dashboard = () => {
   const { updateNotitication } = useNotification();
@@ -38,6 +39,7 @@ const Dashboard = () => {
       />
 
       <LatestUploads />
+      <MostRatedMovies />
     </div>
   );
 };

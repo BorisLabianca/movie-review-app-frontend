@@ -35,3 +35,8 @@ export const getPoster = (posters = []) => {
   if (length > 2) return posters[1];
   return posters[0];
 };
+
+export const convertReviewCount = (count) => {
+  if (count <= 999) return count;
+  parseFloat(count / 1000).toFixed(2) + "K";
+};
