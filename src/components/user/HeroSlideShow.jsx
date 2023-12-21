@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 let count = 0;
 let intervalId;
 
+let newTime = 0;
+let lastTime = 0;
+
 const HeroSlideShow = () => {
   const [slide, setSlide] = useState({});
   const [slides, setSlides] = useState([]);
@@ -25,7 +28,12 @@ const HeroSlideShow = () => {
   };
 
   const startSlideShow = () => {
-    intervalId = setInterval(handleOnNextClick, 3500);
+    intervalId = setInterval(() => {
+      newTime = Date.now();
+      const delta = newTime - lastTime;
+      if (delta < 4000) return clearInterval(intervalId);
+      handleOnNextClick();
+    }, 3500);
   };
   const pauseSlideShow = () => {
     clearInterval(intervalId);
@@ -44,6 +52,7 @@ const HeroSlideShow = () => {
   };
 
   const handleOnNextClick = () => {
+    lastTime = Date.now();
     pauseSlideShow();
     setClonedSlide(slides[count]);
     count = (count + 1) % slides.length;
@@ -108,7 +117,7 @@ const HeroSlideShow = () => {
   return (
     <div className="w-full flex">
       {/* Slide section */}
-      <div className="w-4/5 aspect-video relative overflow-hidden">
+      <div className="md:w-4/5 w-full aspect-video relative overflow-hidden">
         {/* Current Slide */}
         <Slide
           title={slide.title}
@@ -133,7 +142,7 @@ const HeroSlideShow = () => {
       </div>
 
       {/* Up Next section */}
-      <div className="w-1/5 space-y-3 px-3">
+      <div className="w-1/5 space-y-3 px-3 md:block hidden">
         <h1 className="font-semibold text-2xl text-primary dark:text-white">
           Up Next
         </h1>

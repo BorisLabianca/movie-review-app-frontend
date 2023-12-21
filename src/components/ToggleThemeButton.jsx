@@ -16,8 +16,8 @@ const ToggleThemeButton = ({ header }) => {
     <button
       className={
         !header
-          ? "text-secondary p-1 rounded bg-white"
-          : "dark:text-white text-light-subtle p-1 rounded"
+          ? "text-secondary p-1 rounded bg-white sm:text-2xl text-lg"
+          : "dark:text-white text-light-subtle p-1 rounded sm:text-2xl text-lg"
       }
       onClick={handleThemeButton}
     >

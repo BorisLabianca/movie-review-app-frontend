@@ -3,6 +3,7 @@ import Container from "../Container";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks";
 import ToggleThemeButton from "../ToggleThemeButton";
+import AppSearchForm from "../form/AppSearchForm";
 
 const Navbar = () => {
   const { authInfo, handleLogout } = useAuth();
@@ -13,17 +14,16 @@ const Navbar = () => {
       <Container className="p-2">
         <div className="flex justify-between items-center">
           <Link to="/">
-            <img src={logo} alt="Logo" className="h-10" />
+            <img src={logo} alt="Logo" className="sm:h-10 h-8" />
           </Link>
-          <ul className="flex items-center space-x-4">
+          <ul className="flex items-center sm:space-x-4 space-x-2">
             <li>
               <ToggleThemeButton header={false} />
             </li>
             <li>
-              <input
-                type="text"
-                className="border-2 border-dark-subtle p-1 bg-transparent text-xl rounded outline-none focus:border-white transition text-white"
-                placeholder="search..."
+              <AppSearchForm
+                placeholder="Search"
+                inputClassName="border-dark-subtle text-white focus:border-white sm:w-auto w-40 sm:text-lg"
               />
             </li>
             <li>

@@ -32,7 +32,7 @@ const ListItem = ({ movie }) => {
       <img
         src={getPoster(responsivePosters) || poster}
         alt={title}
-        className="object-cover aspect-video"
+        className="object-cover aspect-video w-full"
       />
       <h1
         title={title}
