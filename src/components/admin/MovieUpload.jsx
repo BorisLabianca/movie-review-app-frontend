@@ -53,14 +53,14 @@ const MovieUpload = ({ visible, onClose }) => {
   };
 
   const handleSubmit = async (movieInfo) => {
-    console.log(trailerInfo);
+    // console.log(trailerInfo);
     if (!trailerInfo.url || !trailerInfo.public_id)
       return updateNotification("error", "The trailer is missing.");
     setBusy(true);
     movieInfo.append("trailer", JSON.stringify(trailerInfo));
-    const { response } = await uploadMovie(movieInfo);
+    const response = await uploadMovie(movieInfo);
     setBusy(false);
-    console.log("MovieUpload CLG: ", response);
+    // console.log("MovieUpload CLG: ", response);
     if (response.error) return updateNotification("error", response.error);
     updateNotification("success", "Movie uploaded successfully.");
     resetStates();
