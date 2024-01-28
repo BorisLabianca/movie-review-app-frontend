@@ -88,7 +88,7 @@ const Movies = () => {
 
   useEffect(() => {
     fetchMovies(defaultPageNumber);
-  }, []);
+  }, [newMovies]);
 
   return (
     <>

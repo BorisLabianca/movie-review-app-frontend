@@ -66,7 +66,7 @@ const LatestUploads = () => {
 
   useEffect(() => {
     fetchLatestUploads();
-  }, []);
+  }, [latestUploads]);
   return (
     <>
       <div className="bg-white shadow-md shadow-300y-500 dark:shadow-gray-700 dark:bg-secondary p-5 rounded col-span-2">

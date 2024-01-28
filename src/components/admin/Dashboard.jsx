@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AppInfoBox from "../AppInfoBox";
 import LatestUploads from "../LatestUploads";
 import { getAppInfo } from "../../api/admin";
-import { useNotification } from "../../hooks";
+import { useMovies, useNotification } from "../../hooks";
 import MostRatedMovies from "../MostRatedMovies";
 
 const Dashboard = () => {
@@ -12,7 +12,7 @@ const Dashboard = () => {
     reviewCount: 0,
     userCount: 0,
   });
-
+  const { latestUploads } = useMovies();
   const fetchAppInfo = async () => {
     const { appInfo, error } = await getAppInfo();
     if (error) return updateNotitication("error", error);
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchAppInfo();
-  }, []);
+  }, [latestUploads]);
 
   return (
     <div className="grid grid-cols-3 gap-5 p-5">
