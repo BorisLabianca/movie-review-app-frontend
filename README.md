@@ -21,3 +21,7 @@
 - User side
 - Admin side
 - Custom notification component
+
+## Description
+
+This is a full stack project that gives users the possibility to add reviews to movie, but also has an admin side that allows the admin to add movies and all the movie details (actors, tags, genre, trailer, poster...).
